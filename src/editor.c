@@ -42,14 +42,6 @@ void process_keypress()
     }
 }
 
-static void draw_rows()
-{
-    for (int y = 0; y < editor.screen_rows; y++)
-    {
-        write(STDERR_FILENO, "~\r\n", 3);
-    }
-}
-
 static void erase_display()
 {
     static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
@@ -60,6 +52,14 @@ static void reset_cursor()
 {
     static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
+}
+
+static void draw_rows()
+{
+    for (int y = 0; y < editor.screen_rows; y++)
+    {
+        write(STDERR_FILENO, "~\r\n", 3);
+    }
 }
 
 void clear_screen()
