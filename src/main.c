@@ -4,6 +4,7 @@
 int main(int argc, const char* argv[])
 {
     enable_raw_mode();
+    init_editor();
 
     while (1)
     {

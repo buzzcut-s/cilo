@@ -1,14 +1,24 @@
 #include "cilo/editor.h"
 
+#include <stdint.h>
 #include <stdlib.h>
 
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 #include <cilo/error.h>
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
 
+static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
+
 struct EditorState editor;
+
+void init_editor()
+{
+    if (get_window_size(&editor.screen_rows, &editor.screen_cols))
+        die("get_window_size");
+}
 
 static char read_keypress()
 {
@@ -34,7 +44,7 @@ void process_keypress()
 
 static void draw_rows()
 {
-    for (int y = 0; y < 24; y++)
+    for (int y = 0; y < editor.screen_rows; y++)
     {
         write(STDERR_FILENO, "~\r\n", 3);
     }
@@ -63,4 +73,21 @@ void refresh_screen()
     clear_screen();
     draw_rows();
     reset_cursor();
+}
+
+static int get_window_size(uint16_t* out_rows, uint16_t* out_cols)
+{
+    struct winsize current;
+
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &current) == -1
+        || current.ws_col == 0
+        || current.ws_row == 0)
+    {
+        return -1;
+    }
+
+    *out_rows = current.ws_row;
+    *out_cols = current.ws_col;
+
+    return 0;
 }
