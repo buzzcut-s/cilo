@@ -26,9 +26,9 @@ void enable_raw_mode()
     /* input modes - disable start/stop output control (^S,^Q) */
     raw.c_iflag &= ~(IXON);
 
-    /* local modes - echoing off, canonical off,
+    /* local modes - echoing off, canonical off, disable extended functions
      * disable signal chars (^Z,^C) */
-    raw.c_lflag &= ~(ECHO | ICANON | ISIG);
+    raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
 
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
