@@ -22,10 +22,14 @@ void init_editor()
 
 static char read_keypress()
 {
-    char c = 0;
+    char    c      = 0;
+    ssize_t n_read = 0;
 
-    if (read(STDIN_FILENO, &c, 1) == -1)
-        die("read");
+    while ((n_read = read(STDIN_FILENO, &c, 1)) != 1)
+    {
+        if (n_read == -1)
+            die("read");
+    }
 
     return c;
 }
