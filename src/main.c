@@ -7,6 +7,7 @@ int main(int argc, const char* argv[])
 
     while (1)
     {
+        refresh_screen();
         process_keypress();
     }
 

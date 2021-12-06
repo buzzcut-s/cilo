@@ -3,4 +3,6 @@
 
 void process_keypress();
 
+void refresh_screen();
+
 #endif  // EDITOR_H
