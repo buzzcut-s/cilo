@@ -11,6 +11,8 @@
 static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
 static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
 
+struct EditorState editor;
+
 static char read_keypress()
 {
     char c = 0;

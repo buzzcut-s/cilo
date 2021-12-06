@@ -5,19 +5,18 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include <cilo/editor.h>
 #include <cilo/error.h>
-
-static struct termios original_terminal_state;
 
 static void store_original_terminal_state()
 {
-    if (tcgetattr(STDIN_FILENO, &original_terminal_state) == -1)
+    if (tcgetattr(STDIN_FILENO, &editor.original_state) == -1)
         die("tcgetattr");
 }
 
 static void restore_original_terminal_state()
 {
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_terminal_state) == -1)
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &editor.original_state) == -1)
         die("tcsetattr");
 }
 
@@ -33,7 +32,7 @@ void enable_raw_mode()
     if (atexit(disable_raw_mode) != 0)
         exit(EXIT_FAILURE);
 
-    struct termios raw = original_terminal_state;
+    struct termios raw = editor.original_state;
 
     /* input modes - no break, no CR to NL, no parity check, no strip char
      * disable start/stop output control (^S,^Q) */
