@@ -23,6 +23,9 @@ void enable_raw_mode()
 
     struct termios raw = original_terminal_state;
 
+    /* input modes - disable start/stop output control (^S,^Q) */
+    raw.c_iflag &= ~(IXON);
+
     /* local modes - echoing off, canonical off,
      * disable signal chars (^Z,^C) */
     raw.c_lflag &= ~(ECHO | ICANON | ISIG);
