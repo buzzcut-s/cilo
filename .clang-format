@@ -1,0 +1,72 @@
+# Common
+BasedOnStyle: Google
+
+# Indents
+# Explicitly disabling column limit for clang-format
+# Enforce a limit of 100 using cpplint
+ColumnLimit: 0 
+IndentWidth: 4
+TabWidth: 4
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+AccessModifierOffset: -4
+
+# Include
+IncludeBlocks:   Regroup
+IncludeCategories:
+  # C system headers (as of C11).
+  - Regex:    '^[<"](assert.h|complex.h|ctype.h|errno.h|fenv.h|float.h|inttypes.h|iso646.h|limits.h|locale.h|math.h|setjmp.h|signal.h|stdalign.h|stdarg.h|stdatomic.h|stdbool.h|stddef.h|stdint.h|stdio.h|stdlib.h|stdnoreturn.h|string.h|tgmath.h|threads.h|time.h|uchar.h|wchar.h|wctype.h)[">]$'
+    Priority: 1
+  - Regex:    '^[<"](cilo.*)[">]$'
+    Priority: 3
+  - Regex:           '.*'
+    Priority:        2
+
+# The Google Style Guide only asks for consistency within a project
+# Explicitly choose "int& foo"
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+# Breaks
+BreakConstructorInitializers: AfterColon
+BreakBeforeBinaryOperators: NonAssignment
+KeepEmptyLinesAtTheStartOfBlocks: true
+
+# One Line
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+# Brace Breaks
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeWhile: true
+  AfterStruct: true
+  AfterUnion: false
+  BeforeLambdaBody: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: true
+  
+# Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveBitFields: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+
+# Spaces
+SpaceAfterTemplateKeyword: false
+
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Always
