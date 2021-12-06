@@ -27,6 +27,9 @@ void enable_raw_mode()
      * disable start/stop output control (^S,^Q) */
     raw.c_iflag &= ~(ICRNL | IXON);
 
+    /* output modes - disable post processing */
+    raw.c_oflag &= ~(OPOST);
+
     /* local modes - echoing off, canonical off, disable extended functions
      * disable signal chars (^Z,^C) */
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
