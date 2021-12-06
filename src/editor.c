@@ -1,6 +1,8 @@
 #include "cilo/editor.h"
 
+#include <ctype.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include <sys/ioctl.h>
@@ -79,6 +81,43 @@ void refresh_screen()
     reset_cursor();
 }
 
+static int move_cursor_to_bottom_right()
+{
+    static const char* const CUF_999_CUD_999 = "\x1b[999C\x1b[999B";
+    return write(STDOUT_FILENO, CUF_999_CUD_999, 12) == 12 ? 12
+                                                           : -1;
+}
+
+static int write_cursor_position(uint16_t* out_rows, uint16_t* out_cols)
+{
+    static const char* const DSR_ACTIVE_POSITION = "\x1b[6n";
+    if (write(STDOUT_FILENO, DSR_ACTIVE_POSITION, 4) != 4)
+        return -1;
+
+    char buf[32];
+
+    unsigned int i = 0;
+    while (i < sizeof(buf) - 1)
+    {
+        if (read(STDIN_FILENO, &buf[i], 1) != 1)
+            break;
+
+        if (buf[i] == 'R')
+            break;
+
+        i++;
+    }
+    buf[i] = '\0';
+
+    if (buf[0] != '\x1b' || buf[1] != '[')
+        return -1;
+
+    if (sscanf(&buf[2], "%hu;%hu", out_rows, out_cols) != 2)
+        return -1;
+
+    return 0;
+}
+
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols)
 {
     struct winsize current;
@@ -87,7 +126,10 @@ static int get_window_size(uint16_t* out_rows, uint16_t* out_cols)
         || current.ws_col == 0
         || current.ws_row == 0)
     {
-        return -1;
+        if (move_cursor_to_bottom_right() == -1)
+            return -1;
+
+        return write_cursor_position(out_rows, out_cols);
     }
 
     *out_rows = current.ws_row;
