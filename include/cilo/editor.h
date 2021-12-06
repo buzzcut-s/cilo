@@ -12,7 +12,7 @@ extern struct EditorState editor;
 
 void process_keypress();
 
-void refresh_screen();
 void clear_screen();
+void refresh_screen();
 
 #endif  // EDITOR_H

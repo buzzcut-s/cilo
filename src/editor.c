@@ -8,9 +8,6 @@
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
 
-static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
-static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
-
 struct EditorState editor;
 
 static char read_keypress()
@@ -43,15 +40,27 @@ static void draw_rows()
     }
 }
 
-void refresh_screen()
+static void erase_display()
 {
-    clear_screen();
-    draw_rows();
+    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
+    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
+}
+
+static void reset_cursor()
+{
+    static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
 
 void clear_screen()
 {
-    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
-    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
+    erase_display();
+    reset_cursor();
+}
+
+void refresh_screen()
+{
+    clear_screen();
+    draw_rows();
+    reset_cursor();
 }
