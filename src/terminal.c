@@ -23,8 +23,9 @@ void enable_raw_mode()
 
     struct termios raw = original_terminal_state;
 
-    /* local modes - echoing off, canonical off */
-    raw.c_lflag &= ~(ECHO | ICANON);
+    /* local modes - echoing off, canonical off,
+     * disable signal chars (^Z,^C) */
+    raw.c_lflag &= ~(ECHO | ICANON | ISIG);
 
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
