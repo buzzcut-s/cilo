@@ -16,7 +16,7 @@ struct EditorState editor;
 
 void init_editor()
 {
-    if (get_window_size(&editor.screen_rows, &editor.screen_cols))
+    if (get_window_size(&editor.screen_rows, &editor.screen_cols) == -1)
         die("get_window_size");
 }
 
