@@ -8,6 +8,9 @@
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
 
+static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
+static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
+
 static char read_keypress()
 {
     char c = 0;
@@ -30,16 +33,23 @@ void process_keypress()
     }
 }
 
+static void draw_rows()
+{
+    for (int y = 0; y < 24; y++)
+    {
+        write(STDERR_FILENO, "~\r\n", 3);
+    }
+}
+
 void refresh_screen()
 {
     clear_screen();
+    draw_rows();
+    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
 
 void clear_screen()
 {
-    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
-    static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
-
     write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
