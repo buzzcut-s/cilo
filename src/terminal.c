@@ -23,12 +23,15 @@ void enable_raw_mode()
 
     struct termios raw = original_terminal_state;
 
-    /* input modes - no CR to NL,
+    /* input modes - no break, no CR to NL, no parity check, no strip char
      * disable start/stop output control (^S,^Q) */
-    raw.c_iflag &= ~(ICRNL | IXON);
+    raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
 
     /* output modes - disable post processing */
     raw.c_oflag &= ~(OPOST);
+
+    /* control modes - set 8 bit chars */
+    raw.c_cflag |= (CS8);
 
     /* local modes - echoing off, canonical off, disable extended functions
      * disable signal chars (^Z,^C) */
