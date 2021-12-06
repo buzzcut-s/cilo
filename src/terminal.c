@@ -5,18 +5,22 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include <cilo/error.h>
+
 static struct termios original_terminal_state;
 
 static void disable_raw_mode()
 {
     /* restore original terminal attributes */
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_terminal_state);
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_terminal_state) == -1)
+        die("tcsetattr");
 }
 
 void enable_raw_mode()
 {
     /* store original terminal attributes */
-    tcgetattr(STDIN_FILENO, &original_terminal_state);
+    if (tcgetattr(STDIN_FILENO, &original_terminal_state) == -1)
+        die("tcgetattr");
 
     if (atexit(disable_raw_mode) != 0)
         exit(EXIT_FAILURE);
@@ -43,5 +47,6 @@ void enable_raw_mode()
     /* 100 ms timeout (unit is tenths of a second) */
     raw.c_cc[VTIME] = 1;
 
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
+        die("tcsetattr");
 }

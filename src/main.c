@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 
+#include <cilo/error.h>
 #include <cilo/terminal.h>
 
 int main(int argc, const char* argv[])
@@ -12,7 +13,8 @@ int main(int argc, const char* argv[])
     while (1)
     {
         char c = '\0';
-        read(STDIN_FILENO, &c, 1);
+        if (read(STDIN_FILENO, &c, 1) == -1)
+            die("read");
 
         if (iscntrl(c))
             printf("%d\r\n", c);
