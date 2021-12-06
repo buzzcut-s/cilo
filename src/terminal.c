@@ -37,5 +37,11 @@ void enable_raw_mode()
      * disable signal chars (^Z,^C) */
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
 
+    /* Return each byte as soon as there is any input */
+    raw.c_cc[VMIN] = 0;
+
+    /* 100 ms timeout (unit is tenths of a second) */
+    raw.c_cc[VTIME] = 1;
+
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
