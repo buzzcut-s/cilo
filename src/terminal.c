@@ -9,18 +9,26 @@
 
 static struct termios original_terminal_state;
 
-static void disable_raw_mode()
+static void store_original_terminal_state()
 {
-    /* restore original terminal attributes */
+    if (tcgetattr(STDIN_FILENO, &original_terminal_state) == -1)
+        die("tcgetattr");
+}
+
+static void restore_original_terminal_state()
+{
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_terminal_state) == -1)
         die("tcsetattr");
 }
 
+static void disable_raw_mode()
+{
+    restore_original_terminal_state();
+}
+
 void enable_raw_mode()
 {
-    /* store original terminal attributes */
-    if (tcgetattr(STDIN_FILENO, &original_terminal_state) == -1)
-        die("tcgetattr");
+    store_original_terminal_state();
 
     if (atexit(disable_raw_mode) != 0)
         exit(EXIT_FAILURE);
