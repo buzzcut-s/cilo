@@ -64,7 +64,10 @@ static void draw_rows()
 {
     for (int y = 0; y < editor.screen_rows; y++)
     {
-        write(STDERR_FILENO, "~\r\n", 3);
+        write(STDERR_FILENO, "~", 1);
+
+        if (y < editor.screen_rows - 1)
+            write(STDERR_FILENO, "\r\n", 2);
     }
 }
 
