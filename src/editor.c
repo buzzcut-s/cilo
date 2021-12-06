@@ -25,11 +25,17 @@ void process_keypress()
     switch (c)
     {
         case CTRL_PLUS('q'):
+            clear_screen();
             exit(EXIT_SUCCESS);
     }
 }
 
 void refresh_screen()
+{
+    clear_screen();
+}
+
+void clear_screen()
 {
     static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
     static const char* const CURSOR_POSITION_1_1  = "\x1b[H";

@@ -4,5 +4,6 @@
 void process_keypress();
 
 void refresh_screen();
+void clear_screen();
 
 #endif  // EDITOR_H
