@@ -1,9 +1,9 @@
 #include "cilo/editor.h"
 
-#include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -55,11 +55,42 @@ static void clear_line(struct AppendBuffer* ab)
     buffer_insert(ab, ERASE_IN_LINE_TILL_END, 3);
 }
 
+static void insert_padding(struct AppendBuffer* ab, uint64_t padding)
+{
+    if (padding)
+    {
+        buffer_insert(ab, "~", 1);
+        padding--;
+    }
+
+    while (padding--)
+        buffer_insert(ab, " ", 1);
+}
+
+static void print_welcome(struct AppendBuffer* ab)
+{
+    const char* welcome = "cilo editor";
+
+    uint64_t welcome_length = strlen(welcome);
+    if (welcome_length > editor.screen_cols)
+        welcome_length = editor.screen_cols;
+
+    const uint64_t padding_till_centre =
+      (editor.screen_cols - welcome_length) / 2;
+
+    insert_padding(ab, padding_till_centre);
+
+    buffer_insert(ab, welcome, welcome_length);
+}
+
 static void draw_rows(struct AppendBuffer* ab)
 {
     for (int y = 0; y < editor.screen_rows; y++)
     {
-        buffer_insert(ab, "~", 1);
+        if (y == editor.screen_rows / 3)
+            print_welcome(ab);
+        else
+            buffer_insert(ab, "~", 1);
 
         clear_line(ab);
         if (y < editor.screen_rows - 1)
