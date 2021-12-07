@@ -15,10 +15,10 @@
 
 enum EditorKey
 {
-    ArrowUp    = 'w',
-    ArrowLeft  = 'a',
-    ArrowDown  = 's',
-    ArrowRight = 'd',
+    ArrowUp = 2103,
+    ArrowLeft,
+    ArrowDown,
+    ArrowRight,
 };
 
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
@@ -34,7 +34,7 @@ void init_editor()
         die("get_window_size");
 }
 
-static char handle_escape_sequence()
+static int handle_escape_sequence()
 {
     char seq[3];
 
@@ -59,7 +59,7 @@ static char handle_escape_sequence()
     return '\x1b';
 }
 
-static char read_keypress()
+static int read_keypress()
 {
     char    c      = 0;
     ssize_t n_read = 0;
@@ -77,7 +77,7 @@ static char read_keypress()
 }
 
 // clang-format off
-static void move_cursor(char key)
+static void move_cursor(int key)
 {
     switch (key)
     {
@@ -91,7 +91,7 @@ static void move_cursor(char key)
 
 void process_keypress()
 {
-    const char c = read_keypress();
+    const int c = read_keypress();
 
     switch (c)
     {
