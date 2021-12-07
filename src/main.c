@@ -8,7 +8,7 @@ int main(int argc, const char* argv[])
 
     while (1)
     {
-        refresh_screen();
+        redraw_editor();
         process_keypress();
     }
 

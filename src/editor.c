@@ -247,7 +247,7 @@ static void update_cursor(struct StringBuffer* sb)
     buffer_insert(sb, buf, buf_len);
 }
 
-void refresh_screen()
+void redraw_editor()
 {
     struct StringBuffer sb;
     buffer_init(&sb);
