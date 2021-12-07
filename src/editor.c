@@ -19,6 +19,8 @@ enum EditorKey
     ArrowLeft,
     ArrowDown,
     ArrowRight,
+    PageUp,
+    PageDown,
 };
 
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
@@ -45,17 +47,31 @@ static int handle_escape_sequence()
 
     if (seq[0] == '[')
     {
-        // clang-format off
-        switch (seq[1])
+        if (seq[1] >= '0' && seq[1] <= '9')
         {
-            case 'A': return ArrowUp;
-            case 'B': return ArrowDown;
-            case 'C': return ArrowRight;
-            case 'D': return ArrowLeft;
-        }
-        // clang-format on
-    }
+            if (read(STDIN_FILENO, &seq[2], 1) != 1)
+                return '\x1b';
 
+            if (seq[2] == '~')
+            {
+                switch (seq[1])  // clang-format off
+                {
+                    case '5': return PageUp;
+                    case '6': return PageDown;
+                }  // clang-format on
+            }
+        }
+        else
+        {
+            switch (seq[1])  // clang-format off
+            {
+                case 'A': return ArrowUp;
+                case 'B': return ArrowDown;
+                case 'C': return ArrowRight;
+                case 'D': return ArrowLeft;
+            }  // clang-format on
+        }
+    }
     return '\x1b';
 }
 
@@ -118,6 +134,15 @@ void process_keypress()
         case ArrowRight:
             move_cursor(c);
             break;
+
+        case PageUp:
+        case PageDown:
+        {
+            int times = editor.screen_rows;
+            while (times--)
+                move_cursor(c == PageUp ? ArrowUp : ArrowDown);
+        }
+        break;
     }
 }
 
