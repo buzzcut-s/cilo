@@ -7,8 +7,8 @@
 
 #include <unistd.h>
 
-#include <cilo/append_buffer.h>
 #include <cilo/error.h>
+#include <cilo/string_buffer.h>
 #include <cilo/window_size.h>
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
@@ -175,25 +175,25 @@ void clear_screen()
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
 
-static void clear_line(struct AppendBuffer* ab)
+static void clear_line(struct StringBuffer* sb)
 {
     static const char* const ERASE_IN_LINE_TILL_END = "\x1b[K";
-    buffer_insert(ab, ERASE_IN_LINE_TILL_END, 3);
+    buffer_insert(sb, ERASE_IN_LINE_TILL_END, 3);
 }
 
-static void insert_padding(struct AppendBuffer* ab, uint64_t padding)
+static void insert_padding(struct StringBuffer* sb, uint64_t padding)
 {
     if (padding)
     {
-        buffer_insert(ab, "~", 1);
+        buffer_insert(sb, "~", 1);
         padding--;
     }
 
     while (padding--)
-        buffer_insert(ab, " ", 1);
+        buffer_insert(sb, " ", 1);
 }
 
-static void print_welcome(struct AppendBuffer* ab)
+static void print_welcome(struct StringBuffer* sb)
 {
     const char* welcome = "cilo editor";
 
@@ -204,45 +204,45 @@ static void print_welcome(struct AppendBuffer* ab)
     const uint64_t padding_till_centre =
       (editor.screen_cols - welcome_length) / 2;
 
-    insert_padding(ab, padding_till_centre);
+    insert_padding(sb, padding_till_centre);
 
-    buffer_insert(ab, welcome, welcome_length);
+    buffer_insert(sb, welcome, welcome_length);
 }
 
-static void draw_rows(struct AppendBuffer* ab)
+static void draw_rows(struct StringBuffer* sb)
 {
     for (int y = 0; y < editor.screen_rows; y++)
     {
         if (y == editor.screen_rows / 3)
-            print_welcome(ab);
+            print_welcome(sb);
         else
-            buffer_insert(ab, "~", 1);
+            buffer_insert(sb, "~", 1);
 
-        clear_line(ab);
+        clear_line(sb);
         if (y < editor.screen_rows - 1)
-            buffer_insert(ab, "\r\n", 2);
+            buffer_insert(sb, "\r\n", 2);
     }
 }
 
-static void reset_cursor(struct AppendBuffer* ab)
+static void reset_cursor(struct StringBuffer* sb)
 {
     static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
-    buffer_insert(ab, CURSOR_POSITION_1_1, 3);
+    buffer_insert(sb, CURSOR_POSITION_1_1, 3);
 }
 
-static void hide_cursor(struct AppendBuffer* ab)
+static void hide_cursor(struct StringBuffer* sb)
 {
     static const char* const SET_MODE_CURSOR_HIDE = "\x1b[?25l";
-    buffer_insert(ab, SET_MODE_CURSOR_HIDE, 6);
+    buffer_insert(sb, SET_MODE_CURSOR_HIDE, 6);
 }
 
-static void show_cursor(struct AppendBuffer* ab)
+static void show_cursor(struct StringBuffer* sb)
 {
     static const char* const SET_MODE_CURSOR_SHOW = "\x1b[?25h";
-    buffer_insert(ab, SET_MODE_CURSOR_SHOW, 6);
+    buffer_insert(sb, SET_MODE_CURSOR_SHOW, 6);
 }
 
-static void update_cursor(struct AppendBuffer* ab)
+static void update_cursor(struct StringBuffer* sb)
 {
     static const char* const CURSOR_POSITION_Y_X = "\x1b[%d;%dH";
 
@@ -251,22 +251,22 @@ static void update_cursor(struct AppendBuffer* ab)
     const int buf_len = snprintf(buf, sizeof(buf), CURSOR_POSITION_Y_X,
                                  editor.cursor_y + 1, editor.cursor_x + 1);
 
-    buffer_insert(ab, buf, buf_len);
+    buffer_insert(sb, buf, buf_len);
 }
 
 void refresh_screen()
 {
-    struct AppendBuffer ab;
-    buffer_init(&ab);
+    struct StringBuffer sb;
+    buffer_init(&sb);
 
-    hide_cursor(&ab);
-    reset_cursor(&ab);
+    hide_cursor(&sb);
+    reset_cursor(&sb);
 
-    draw_rows(&ab);
+    draw_rows(&sb);
 
-    update_cursor(&ab);
-    show_cursor(&ab);
+    update_cursor(&sb);
+    show_cursor(&sb);
 
-    buffer_flush(&ab);
-    buffer_free(&ab);
+    buffer_flush(&sb);
+    buffer_free(&sb);
 }
