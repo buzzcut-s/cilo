@@ -15,8 +15,6 @@
 
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
 
-static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
-
 struct EditorState editor;
 
 void init_editor()
@@ -71,6 +69,7 @@ static void draw_rows(struct AppendBuffer* ab)
 
 static void reset_cursor(struct AppendBuffer* ab)
 {
+    static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
     buffer_insert(ab, CURSOR_POSITION_1_1, 3);
 }
 
@@ -89,6 +88,7 @@ static void show_cursor(struct AppendBuffer* ab)
 void clear_screen()
 {
     static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
+    static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
     write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
