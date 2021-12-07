@@ -73,6 +73,18 @@ static void draw_rows(struct AppendBuffer* ab)
     }
 }
 
+static void hide_cursor(struct AppendBuffer* ab)
+{
+    static const char* const SET_MODE_CURSOR_HIDE = "\x1b[?25l";
+    buffer_insert(ab, SET_MODE_CURSOR_HIDE, 6);
+}
+
+static void show_cursor(struct AppendBuffer* ab)
+{
+    static const char* const SET_MODE_CURSOR_SHOW = "\x1b[?25h";
+    buffer_insert(ab, SET_MODE_CURSOR_SHOW, 6);
+}
+
 void clear_screen()
 {
     write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
@@ -83,10 +95,14 @@ void refresh_screen()
 {
     struct AppendBuffer ab = BUFFER_INIT;
 
+    hide_cursor(&ab);
     erase_display(&ab);
     reset_cursor(&ab);
+
     draw_rows(&ab);
+
     reset_cursor(&ab);
+    show_cursor(&ab);
 
     buffer_flush(&ab);
     buffer_free(&ab);
