@@ -15,8 +15,7 @@
 
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
 
-static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
-static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
+static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
 
 struct EditorState editor;
 
@@ -52,9 +51,10 @@ void process_keypress()
     }
 }
 
-static void erase_display(struct AppendBuffer* ab)
+static void clear_line(struct AppendBuffer* ab)
 {
-    buffer_insert(ab, ERASE_IN_DISPLAY_ALL, 4);
+    static const char* const ERASE_IN_LINE_TILL_END = "\x1b[K";
+    buffer_insert(ab, ERASE_IN_LINE_TILL_END, 3);
 }
 
 static void reset_cursor(struct AppendBuffer* ab)
@@ -68,6 +68,7 @@ static void draw_rows(struct AppendBuffer* ab)
     {
         buffer_insert(ab, "~", 1);
 
+        clear_line(ab);
         if (y < editor.screen_rows - 1)
             buffer_insert(ab, "\r\n", 2);
     }
@@ -87,6 +88,7 @@ static void show_cursor(struct AppendBuffer* ab)
 
 void clear_screen()
 {
+    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
     write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
@@ -96,7 +98,6 @@ void refresh_screen()
     struct AppendBuffer ab = BUFFER_INIT;
 
     hide_cursor(&ab);
-    erase_display(&ab);
     reset_cursor(&ab);
 
     draw_rows(&ab);
