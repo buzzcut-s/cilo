@@ -49,6 +49,14 @@ void process_keypress()
     }
 }
 
+void clear_screen()
+{
+    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
+    static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
+    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
+    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
+}
+
 static void clear_line(struct AppendBuffer* ab)
 {
     static const char* const ERASE_IN_LINE_TILL_END = "\x1b[K";
@@ -114,14 +122,6 @@ static void show_cursor(struct AppendBuffer* ab)
 {
     static const char* const SET_MODE_CURSOR_SHOW = "\x1b[?25h";
     buffer_insert(ab, SET_MODE_CURSOR_SHOW, 6);
-}
-
-void clear_screen()
-{
-    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
-    static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
-    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
-    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
 
 void refresh_screen()
