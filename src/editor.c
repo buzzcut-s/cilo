@@ -19,6 +19,9 @@ struct EditorState editor;
 
 void init_editor()
 {
+    editor.cursor_x = 0;
+    editor.cursor_y = 0;
+
     if (get_window_size(&editor.screen_rows, &editor.screen_cols) == -1)
         die("get_window_size");
 }
@@ -124,6 +127,18 @@ static void show_cursor(struct AppendBuffer* ab)
     buffer_insert(ab, SET_MODE_CURSOR_SHOW, 6);
 }
 
+static void update_cursor(struct AppendBuffer* ab)
+{
+    static const char* const CURSOR_POSITION_Y_X = "\x1b[%d;%dH";
+
+    char buf[32];
+
+    const int buf_len = snprintf(buf, sizeof(buf), CURSOR_POSITION_Y_X,
+                                 editor.cursor_y + 1, editor.cursor_x + 1);
+
+    buffer_insert(ab, buf, buf_len);
+}
+
 void refresh_screen()
 {
     struct AppendBuffer ab;
@@ -134,7 +149,7 @@ void refresh_screen()
 
     draw_rows(&ab);
 
-    reset_cursor(&ab);
+    update_cursor(&ab);
     show_cursor(&ab);
 
     buffer_flush(&ab);

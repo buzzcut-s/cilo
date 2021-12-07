@@ -8,8 +8,12 @@
 struct EditorState
 {
     struct termios original_state;
-    uint16_t       screen_rows;
-    uint16_t       screen_cols;
+
+    int cursor_x;
+    int cursor_y;
+
+    uint16_t screen_rows;
+    uint16_t screen_cols;
 };
 
 extern struct EditorState editor;
