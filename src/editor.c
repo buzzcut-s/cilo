@@ -76,18 +76,31 @@ static int read_keypress()
     return c;
 }
 
-// clang-format off
 static void move_cursor(int key)
 {
     switch (key)
     {
-        case ArrowUp:    editor.cursor_y--; break;
-        case ArrowLeft:  editor.cursor_x--; break;
-        case ArrowDown:  editor.cursor_y++; break;
-        case ArrowRight: editor.cursor_x++; break;
+        case ArrowUp:
+            if (editor.cursor_y != 0)
+                editor.cursor_y--;
+            break;
+
+        case ArrowLeft:
+            if (editor.cursor_x != 0)
+                editor.cursor_x--;
+            break;
+
+        case ArrowDown:
+            if (editor.cursor_y != editor.screen_rows - 1)
+                editor.cursor_y++;
+            break;
+
+        case ArrowRight:
+            if (editor.cursor_x != editor.screen_cols - 1)
+                editor.cursor_x++;
+            break;
     }
 }
-// clang-format on
 
 void process_keypress()
 {
