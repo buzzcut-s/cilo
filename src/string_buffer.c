@@ -6,36 +6,28 @@
 
 #include <unistd.h>
 
-static const size_t BUFFER_INITIAL_SIZE = 256;
-
 void buffer_init(struct StringBuffer* sb)
 {
-    char* result = (char*)malloc(BUFFER_INITIAL_SIZE);
+    static const size_t BUFFER_INITIAL_SIZE = 256;
 
-    /* Store NULL if allocation fails */
-    sb->buffer = result;
+    sb->buffer = malloc(BUFFER_INITIAL_SIZE);
+    if (sb->buffer == NULL)
+        return;
 
-    sb->length = 0;
+    sb->capacity = BUFFER_INITIAL_SIZE;
 }
 
 void buffer_insert(struct StringBuffer* sb, const char* s, size_t length)
 {
-    if (sb->length + length > BUFFER_INITIAL_SIZE)
+    if (sb->length + length > sb->capacity)
     {
-        char* result = realloc(sb->buffer, sb->length + length);
-        if (result == NULL)
-            return;
-
-        memcpy(&result[sb->length], s, length);
-        sb->buffer = result;
-    }
-    else
-    {
+        sb->capacity = (sb->capacity * 2) + length;
+        sb->buffer   = realloc(sb->buffer, sb->capacity);
         if (sb->buffer == NULL)
             return;
-
-        memcpy(&sb->buffer[sb->length], s, length);
     }
+
+    memcpy(&sb->buffer[sb->length], s, length);
 
     sb->length += length;
 }

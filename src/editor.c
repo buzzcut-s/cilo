@@ -249,7 +249,7 @@ static void update_cursor(struct StringBuffer* sb)
 
 void redraw_editor()
 {
-    struct StringBuffer sb;
+    struct StringBuffer sb = BUFFER_ZERO;
     buffer_init(&sb);
 
     hide_cursor(&sb);

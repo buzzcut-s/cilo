@@ -7,7 +7,13 @@ struct StringBuffer
 {
     char*  buffer;
     size_t length;
+    size_t capacity;
 };
+
+#define BUFFER_ZERO \
+    {               \
+        NULL, 0, 0  \
+    }
 
 void buffer_init(struct StringBuffer* sb);
 
