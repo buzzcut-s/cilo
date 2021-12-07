@@ -40,6 +40,19 @@ static char read_keypress()
     return c;
 }
 
+// clang-format off
+static void move_cursor(char key)
+{
+    switch (key)
+    {
+        case 'w': editor.cursor_y--; break;
+        case 'a': editor.cursor_x--; break;
+        case 's': editor.cursor_y++; break;
+        case 'd': editor.cursor_x++; break;
+    }
+}
+// clang-format on
+
 void process_keypress()
 {
     const char c = read_keypress();
@@ -49,6 +62,12 @@ void process_keypress()
         case CTRL_PLUS('q'):
             clear_screen();
             exit(EXIT_SUCCESS);
+
+        case 'w':
+        case 'a':
+        case 's':
+        case 'd':
+            move_cursor(c);
     }
 }
 
