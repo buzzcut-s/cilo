@@ -57,11 +57,6 @@ static void clear_line(struct AppendBuffer* ab)
     buffer_insert(ab, ERASE_IN_LINE_TILL_END, 3);
 }
 
-static void reset_cursor(struct AppendBuffer* ab)
-{
-    buffer_insert(ab, CURSOR_POSITION_1_1, 3);
-}
-
 static void draw_rows(struct AppendBuffer* ab)
 {
     for (int y = 0; y < editor.screen_rows; y++)
@@ -72,6 +67,11 @@ static void draw_rows(struct AppendBuffer* ab)
         if (y < editor.screen_rows - 1)
             buffer_insert(ab, "\r\n", 2);
     }
+}
+
+static void reset_cursor(struct AppendBuffer* ab)
+{
+    buffer_insert(ab, CURSOR_POSITION_1_1, 3);
 }
 
 static void hide_cursor(struct AppendBuffer* ab)
