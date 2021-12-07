@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include <cilo/append_buffer.h>
 #include <cilo/error.h>
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
@@ -51,24 +52,24 @@ void process_keypress()
     }
 }
 
-static void erase_display()
+static void erase_display(struct AppendBuffer* ab)
 {
-    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
+    buffer_insert(ab, ERASE_IN_DISPLAY_ALL, 4);
 }
 
-static void reset_cursor()
+static void reset_cursor(struct AppendBuffer* ab)
 {
-    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
+    buffer_insert(ab, CURSOR_POSITION_1_1, 3);
 }
 
-static void draw_rows()
+static void draw_rows(struct AppendBuffer* ab)
 {
     for (int y = 0; y < editor.screen_rows; y++)
     {
-        write(STDERR_FILENO, "~", 1);
+        buffer_insert(ab, "~", 1);
 
         if (y < editor.screen_rows - 1)
-            write(STDERR_FILENO, "\r\n", 2);
+            buffer_insert(ab, "\r\n", 2);
     }
 }
 
@@ -80,10 +81,15 @@ void clear_screen()
 
 void refresh_screen()
 {
-    erase_display();
-    reset_cursor();
-    draw_rows();
-    reset_cursor();
+    struct AppendBuffer ab = BUFFER_INIT;
+
+    erase_display(&ab);
+    reset_cursor(&ab);
+    draw_rows(&ab);
+    reset_cursor(&ab);
+
+    buffer_flush(&ab);
+    buffer_free(&ab);
 }
 
 static int move_cursor_to_bottom_right()
