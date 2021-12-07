@@ -21,6 +21,8 @@ enum EditorKey
     ArrowRight,
     PageUp,
     PageDown,
+    Home,
+    End,
 };
 
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
@@ -58,6 +60,8 @@ static int handle_escape_sequence()
                 {
                     case '5': return PageUp;
                     case '6': return PageDown;
+                    case '1': case '7': return Home;
+                    case '4': case '8': return End;
                 }  // clang-format on
             }
         }
@@ -69,9 +73,20 @@ static int handle_escape_sequence()
                 case 'B': return ArrowDown;
                 case 'C': return ArrowRight;
                 case 'D': return ArrowLeft;
+                case 'H': return Home;
+                case 'F': return End;
             }  // clang-format on
         }
     }
+    else if (seq[0] == 'O')
+    {
+        switch (seq[1])  // clang-format off
+        {
+            case 'H': return Home;
+            case 'F': return End;
+        }  // clang-format on
+    }
+
     return '\x1b';
 }
 
@@ -143,6 +158,14 @@ void process_keypress()
                 move_cursor(c == PageUp ? ArrowUp : ArrowDown);
         }
         break;
+
+        case Home:
+            editor.cursor_x = 0;
+            break;
+
+        case End:
+            editor.cursor_x = editor.screen_cols - 1;
+            break;
     }
 }
 
