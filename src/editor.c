@@ -13,6 +13,14 @@
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
 
+enum EditorKey
+{
+    ArrowUp    = 'w',
+    ArrowLeft  = 'a',
+    ArrowDown  = 's',
+    ArrowRight = 'd',
+};
+
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
 
 struct EditorState editor;
@@ -26,6 +34,31 @@ void init_editor()
         die("get_window_size");
 }
 
+static char handle_escape_sequence()
+{
+    char seq[3];
+
+    if (read(STDIN_FILENO, &seq[0], 1) != 1)
+        return '\x1b';
+    if (read(STDIN_FILENO, &seq[1], 1) != 1)
+        return '\x1b';
+
+    if (seq[0] == '[')
+    {
+        // clang-format off
+        switch (seq[1])
+        {
+            case 'A': return ArrowUp;
+            case 'B': return ArrowDown;
+            case 'C': return ArrowRight;
+            case 'D': return ArrowLeft;
+        }
+        // clang-format on
+    }
+
+    return '\x1b';
+}
+
 static char read_keypress()
 {
     char    c      = 0;
@@ -37,6 +70,9 @@ static char read_keypress()
             die("read");
     }
 
+    if (c == '\x1b')
+        return handle_escape_sequence();
+
     return c;
 }
 
@@ -45,10 +81,10 @@ static void move_cursor(char key)
 {
     switch (key)
     {
-        case 'w': editor.cursor_y--; break;
-        case 'a': editor.cursor_x--; break;
-        case 's': editor.cursor_y++; break;
-        case 'd': editor.cursor_x++; break;
+        case ArrowUp:    editor.cursor_y--; break;
+        case ArrowLeft:  editor.cursor_x--; break;
+        case ArrowDown:  editor.cursor_y++; break;
+        case ArrowRight: editor.cursor_x++; break;
     }
 }
 // clang-format on
@@ -63,11 +99,12 @@ void process_keypress()
             clear_screen();
             exit(EXIT_SUCCESS);
 
-        case 'w':
-        case 'a':
-        case 's':
-        case 'd':
+        case ArrowUp:
+        case ArrowLeft:
+        case ArrowDown:
+        case ArrowRight:
             move_cursor(c);
+            break;
     }
 }
 
