@@ -8,7 +8,7 @@
 
 void buffer_insert(struct AppendBuffer* ab, const char* s, size_t length)
 {
-    char* result = realloc(ab->buffer, ab->length);
+    char* result = realloc(ab->buffer, ab->length + length);
     if (result == NULL)
         return;
 
