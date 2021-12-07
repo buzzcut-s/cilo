@@ -14,6 +14,9 @@
 
 static int get_window_size(uint16_t* out_rows, uint16_t* out_cols);
 
+static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
+static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
+
 struct EditorState editor;
 
 void init_editor()
@@ -50,13 +53,11 @@ void process_keypress()
 
 static void erase_display()
 {
-    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
     write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
 }
 
 static void reset_cursor()
 {
-    static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
 
@@ -73,13 +74,14 @@ static void draw_rows()
 
 void clear_screen()
 {
-    erase_display();
-    reset_cursor();
+    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
+    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
 
 void refresh_screen()
 {
-    clear_screen();
+    erase_display();
+    reset_cursor();
     draw_rows();
     reset_cursor();
 }
