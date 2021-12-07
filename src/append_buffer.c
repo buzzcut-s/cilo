@@ -6,6 +6,18 @@
 
 #include <unistd.h>
 
+static const size_t BUFFER_INITIAL_SIZE = 64;
+
+void buffer_init(struct AppendBuffer* ab)
+{
+    char* result = (char*)malloc(BUFFER_INITIAL_SIZE);
+
+    /* Store NULL if allocation fails */
+    ab->buffer = result;
+
+    ab->length = 0;
+}
+
 void buffer_insert(struct AppendBuffer* ab, const char* s, size_t length)
 {
     char* result = realloc(ab->buffer, ab->length + length);

@@ -95,7 +95,8 @@ void clear_screen()
 
 void refresh_screen()
 {
-    struct AppendBuffer ab = BUFFER_INIT;
+    struct AppendBuffer ab;
+    buffer_init(&ab);
 
     hide_cursor(&ab);
     reset_cursor(&ab);
