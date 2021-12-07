@@ -59,7 +59,7 @@ static int handle_escape_sequence()
     return '\x1b';
 }
 
-static int read_keypress()
+static int read_key()
 {
     char    c      = 0;
     ssize_t n_read = 0;
@@ -104,7 +104,7 @@ static void move_cursor(int key)
 
 void process_keypress()
 {
-    const int c = read_keypress();
+    const int c = read_key();
 
     switch (c)
     {
