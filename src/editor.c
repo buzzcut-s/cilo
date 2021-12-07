@@ -9,6 +9,7 @@
 
 #include <cilo/error.h>
 #include <cilo/string_buffer.h>
+#include <cilo/terminal.h>
 #include <cilo/window_size.h>
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
@@ -165,14 +166,6 @@ void process_keypress()
             editor.cursor_x = editor.screen_cols - 1;
             break;
     }
-}
-
-void clear_screen()
-{
-    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
-    static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
-    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
-    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
 }
 
 static void clear_line(struct StringBuffer* sb)

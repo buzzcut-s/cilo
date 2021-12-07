@@ -57,3 +57,11 @@ void enable_raw_mode()
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
         die("tcsetattr");
 }
+
+void clear_screen()
+{
+    static const char* const ERASE_IN_DISPLAY_ALL = "\x1b[2J";
+    static const char* const CURSOR_POSITION_1_1  = "\x1b[H";
+    write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
+    write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);
+}

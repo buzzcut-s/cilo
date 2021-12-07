@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include <cilo/editor.h>
+#include <cilo/terminal.h>
 
 void die(const char* s)
 {

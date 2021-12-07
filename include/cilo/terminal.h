@@ -3,4 +3,6 @@
 
 void enable_raw_mode();
 
+void clear_screen();
+
 #endif

@@ -22,7 +22,6 @@ void init_editor();
 
 void process_keypress();
 
-void clear_screen();
 void refresh_screen();
 
 #endif  // EDITOR_H
