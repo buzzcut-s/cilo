@@ -6,7 +6,7 @@
 
 #include <unistd.h>
 
-static const size_t BUFFER_INITIAL_SIZE = 64;
+static const size_t BUFFER_INITIAL_SIZE = 256;
 
 void buffer_init(struct AppendBuffer* ab)
 {
@@ -20,12 +20,23 @@ void buffer_init(struct AppendBuffer* ab)
 
 void buffer_insert(struct AppendBuffer* ab, const char* s, size_t length)
 {
-    char* result = realloc(ab->buffer, ab->length + length);
-    if (result == NULL)
-        return;
+    if (ab->length + length > BUFFER_INITIAL_SIZE)
+    {
+        char* result = realloc(ab->buffer, ab->length + length);
+        if (result == NULL)
+            return;
 
-    memcpy(&result[ab->length], s, length);
-    ab->buffer = result;
+        memcpy(&result[ab->length], s, length);
+        ab->buffer = result;
+    }
+    else
+    {
+        if (ab->buffer == NULL)
+            return;
+
+        memcpy(&ab->buffer[ab->length], s, length);
+    }
+
     ab->length += length;
 }
 
