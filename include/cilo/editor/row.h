@@ -9,6 +9,6 @@ struct EditorRow
     size_t length;
 };
 
-void er_write_line(struct EditorRow* er, const char* line, size_t length);
+void er_store_line(struct EditorRow* er, const char* line, size_t length);
 
 #endif  // EDITOR_ROW_H

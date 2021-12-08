@@ -149,6 +149,6 @@ static void grow_rows_array()
 void store_line(const char* line, size_t length)
 {
     grow_rows_array();
-    er_write_line(&editor.rows[editor.num_rows], line, length);
+    er_store_line(&editor.rows[editor.num_rows], line, length);
     editor.num_rows++;
 }
