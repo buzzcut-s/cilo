@@ -1,6 +1,6 @@
 #include "cilo/editor/state.h"
 
-#include <stdint.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +14,11 @@
 #include <cilo/window_size.h>
 
 struct EditorState editor;
+
+static inline size_t min(size_t a, size_t b)
+{
+    return (a < b) ? a : b;
+}
 
 void init_editor()
 {
@@ -35,7 +40,7 @@ static void clear_line(struct StringBuffer* sb)
     sbuffer_insert(sb, ERASE_IN_LINE_TILL_END, 3);
 }
 
-static void insert_padding(struct StringBuffer* sb, uint64_t padding)
+static void insert_padding(struct StringBuffer* sb, size_t padding)
 {
     if (padding)
     {
@@ -49,25 +54,20 @@ static void insert_padding(struct StringBuffer* sb, uint64_t padding)
 
 static void display_welcome(struct StringBuffer* sb)
 {
-    const char* welcome = "cilo editor";
+    static const char* const WELCOME = "cilo editor";
 
-    uint64_t welcome_length = strlen(welcome);
-    if (welcome_length > editor.screen_cols)
-        welcome_length = editor.screen_cols;
+    const size_t length = min(strlen(WELCOME), editor.screen_cols);
 
-    const uint64_t padding_till_centre =
-      (editor.screen_cols - welcome_length) / 2;
+    const size_t padding_till_centre =
+      (editor.screen_cols - length) / 2;
 
     insert_padding(sb, padding_till_centre);
-
-    sbuffer_insert(sb, welcome, welcome_length);
+    sbuffer_insert(sb, WELCOME, length);
 }
 
 static void display_file(struct StringBuffer* sb, int row_idx)
 {
-    size_t length = editor.rows[row_idx].length;
-    if (length > editor.screen_cols)
-        length = editor.screen_cols;
+    const size_t length = min(editor.rows[row_idx].length, editor.screen_cols);
 
     sbuffer_insert(sb, editor.rows[row_idx].line, length);
 }
@@ -111,7 +111,6 @@ static void show_cursor(struct StringBuffer* sb)
 
 static void update_cursor(struct StringBuffer* sb)
 {
-
     char buf[32];
 
     const int buf_len = snprintf(buf, sizeof(buf), CURSOR_POSITION_Y_X,
