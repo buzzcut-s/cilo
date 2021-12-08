@@ -8,13 +8,13 @@
 
 void sbuffer_init(struct StringBuffer* sb)
 {
-    static const size_t BUFFER_INITIAL_SIZE = 256;
+    static const size_t BUFFER_INITIAL_CAPACITY = 256;
 
-    sb->buffer = malloc(BUFFER_INITIAL_SIZE);
+    sb->buffer = malloc(BUFFER_INITIAL_CAPACITY);
     if (sb->buffer == NULL)
         return;
 
-    sb->capacity = BUFFER_INITIAL_SIZE;
+    sb->capacity = BUFFER_INITIAL_CAPACITY;
 }
 
 void sbuffer_insert(struct StringBuffer* sb, const char* s, size_t length)
