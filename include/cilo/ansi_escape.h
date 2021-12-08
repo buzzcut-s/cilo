@@ -1,5 +1,5 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef ANSI_ESCAPE_H
+#define ANSI_ESCAPE_H
 
 #define ERASE_IN_DISPLAY_ALL "\x1b[2J"
 
@@ -17,4 +17,4 @@
 
 #define CURSOR_F999_D999 "\x1b[999C\x1b[999B"
 
-#endif  // COMMON_H
+#endif  // ANSI_ESCAPE_H
