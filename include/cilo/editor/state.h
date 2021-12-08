@@ -20,8 +20,6 @@ extern struct EditorState editor;
 
 void init_editor();
 
-void process_keypress();
-
 void redraw_editor();
 
 #endif  // EDITOR_STATE_H

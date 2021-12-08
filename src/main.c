@@ -1,3 +1,4 @@
+#include <cilo/editor/input.h>
 #include <cilo/editor/state.h>
 #include <cilo/terminal.h>
 
