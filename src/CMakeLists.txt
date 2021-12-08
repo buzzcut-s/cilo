@@ -5,8 +5,8 @@ target_include_directories(
   PUBLIC ${cilo_SOURCE_DIR}/include
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_sources(cilo_editor PUBLIC terminal.c error.c editor.c string_buffer.c
-                                  window_size.c)
+target_sources(cilo_editor PUBLIC terminal.c error.c editor/state.c
+                                  string_buffer.c window_size.c)
 
 add_executable(cilo)
 

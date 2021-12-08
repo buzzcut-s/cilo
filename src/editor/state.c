@@ -1,4 +1,4 @@
-#include "cilo/editor.h"
+#include "cilo/editor/state.h"
 
 #include <stdint.h>
 #include <stdio.h>

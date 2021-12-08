@@ -1,5 +1,5 @@
-#ifndef EDITOR_H
-#define EDITOR_H
+#ifndef EDITOR_STATE_H
+#define EDITOR_STATE_H
 
 #include <stdint.h>
 
@@ -24,4 +24,4 @@ void process_keypress();
 
 void redraw_editor();
 
-#endif  // EDITOR_H
+#endif  // EDITOR_STATE_H

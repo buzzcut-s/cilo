@@ -5,7 +5,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include <cilo/editor.h>
+#include <cilo/editor/state.h>
 #include <cilo/error.h>
 
 static void store_original_terminal_state()
