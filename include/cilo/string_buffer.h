@@ -15,11 +15,11 @@ struct StringBuffer
         NULL, 0, 0  \
     }
 
-void buffer_init(struct StringBuffer* sb);
+void sbuffer_init(struct StringBuffer* sb);
 
-void buffer_insert(struct StringBuffer* sb, const char* s, size_t length);
-void buffer_free(struct StringBuffer* sb);
+void sbuffer_insert(struct StringBuffer* sb, const char* s, size_t length);
+void sbuffer_free(struct StringBuffer* sb);
 
-void buffer_flush(const struct StringBuffer* sb);
+void sbuffer_flush(const struct StringBuffer* sb);
 
 #endif  // STRING_BUFFER_H

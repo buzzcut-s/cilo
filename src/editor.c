@@ -171,19 +171,19 @@ void process_keypress()
 static void clear_line(struct StringBuffer* sb)
 {
     static const char* const ERASE_IN_LINE_TILL_END = "\x1b[K";
-    buffer_insert(sb, ERASE_IN_LINE_TILL_END, 3);
+    sbuffer_insert(sb, ERASE_IN_LINE_TILL_END, 3);
 }
 
 static void insert_padding(struct StringBuffer* sb, uint64_t padding)
 {
     if (padding)
     {
-        buffer_insert(sb, "~", 1);
+        sbuffer_insert(sb, "~", 1);
         padding--;
     }
 
     while (padding--)
-        buffer_insert(sb, " ", 1);
+        sbuffer_insert(sb, " ", 1);
 }
 
 static void print_welcome(struct StringBuffer* sb)
@@ -199,7 +199,7 @@ static void print_welcome(struct StringBuffer* sb)
 
     insert_padding(sb, padding_till_centre);
 
-    buffer_insert(sb, welcome, welcome_length);
+    sbuffer_insert(sb, welcome, welcome_length);
 }
 
 static void draw_rows(struct StringBuffer* sb)
@@ -209,30 +209,30 @@ static void draw_rows(struct StringBuffer* sb)
         if (y == editor.screen_rows / 3)
             print_welcome(sb);
         else
-            buffer_insert(sb, "~", 1);
+            sbuffer_insert(sb, "~", 1);
 
         clear_line(sb);
         if (y < editor.screen_rows - 1)
-            buffer_insert(sb, "\r\n", 2);
+            sbuffer_insert(sb, "\r\n", 2);
     }
 }
 
 static void reset_cursor(struct StringBuffer* sb)
 {
     static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
-    buffer_insert(sb, CURSOR_POSITION_1_1, 3);
+    sbuffer_insert(sb, CURSOR_POSITION_1_1, 3);
 }
 
 static void hide_cursor(struct StringBuffer* sb)
 {
     static const char* const SET_MODE_CURSOR_HIDE = "\x1b[?25l";
-    buffer_insert(sb, SET_MODE_CURSOR_HIDE, 6);
+    sbuffer_insert(sb, SET_MODE_CURSOR_HIDE, 6);
 }
 
 static void show_cursor(struct StringBuffer* sb)
 {
     static const char* const SET_MODE_CURSOR_SHOW = "\x1b[?25h";
-    buffer_insert(sb, SET_MODE_CURSOR_SHOW, 6);
+    sbuffer_insert(sb, SET_MODE_CURSOR_SHOW, 6);
 }
 
 static void update_cursor(struct StringBuffer* sb)
@@ -244,13 +244,13 @@ static void update_cursor(struct StringBuffer* sb)
     const int buf_len = snprintf(buf, sizeof(buf), CURSOR_POSITION_Y_X,
                                  editor.cursor_y + 1, editor.cursor_x + 1);
 
-    buffer_insert(sb, buf, buf_len);
+    sbuffer_insert(sb, buf, buf_len);
 }
 
 void redraw_editor()
 {
     struct StringBuffer sb = BUFFER_ZERO;
-    buffer_init(&sb);
+    sbuffer_init(&sb);
 
     hide_cursor(&sb);
     reset_cursor(&sb);
@@ -260,6 +260,6 @@ void redraw_editor()
     update_cursor(&sb);
     show_cursor(&sb);
 
-    buffer_flush(&sb);
-    buffer_free(&sb);
+    sbuffer_flush(&sb);
+    sbuffer_free(&sb);
 }

@@ -6,7 +6,7 @@
 
 #include <unistd.h>
 
-void buffer_init(struct StringBuffer* sb)
+void sbuffer_init(struct StringBuffer* sb)
 {
     static const size_t BUFFER_INITIAL_SIZE = 256;
 
@@ -17,7 +17,7 @@ void buffer_init(struct StringBuffer* sb)
     sb->capacity = BUFFER_INITIAL_SIZE;
 }
 
-void buffer_insert(struct StringBuffer* sb, const char* s, size_t length)
+void sbuffer_insert(struct StringBuffer* sb, const char* s, size_t length)
 {
     if (sb->length + length > sb->capacity)
     {
@@ -32,12 +32,12 @@ void buffer_insert(struct StringBuffer* sb, const char* s, size_t length)
     sb->length += length;
 }
 
-void buffer_free(struct StringBuffer* sb)
+void sbuffer_free(struct StringBuffer* sb)
 {
     free(sb->buffer);
 }
 
-void buffer_flush(const struct StringBuffer* sb)
+void sbuffer_flush(const struct StringBuffer* sb)
 {
     write(STDOUT_FILENO, sb->buffer, sb->length);
 }
