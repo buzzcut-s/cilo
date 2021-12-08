@@ -7,6 +7,7 @@
 
 #include <unistd.h>
 
+#include <cilo/ansi_escape.h>
 #include <cilo/editor/row.h>
 #include <cilo/error.h>
 #include <cilo/string_buffer.h>
@@ -31,7 +32,6 @@ void init_editor()
 
 static void clear_line(struct StringBuffer* sb)
 {
-    static const char* const ERASE_IN_LINE_TILL_END = "\x1b[K";
     sbuffer_insert(sb, ERASE_IN_LINE_TILL_END, 3);
 }
 
@@ -96,25 +96,21 @@ static void draw_rows(struct StringBuffer* sb)
 
 static void reset_cursor(struct StringBuffer* sb)
 {
-    static const char* const CURSOR_POSITION_1_1 = "\x1b[H";
     sbuffer_insert(sb, CURSOR_POSITION_1_1, 3);
 }
 
 static void hide_cursor(struct StringBuffer* sb)
 {
-    static const char* const SET_MODE_CURSOR_HIDE = "\x1b[?25l";
     sbuffer_insert(sb, SET_MODE_CURSOR_HIDE, 6);
 }
 
 static void show_cursor(struct StringBuffer* sb)
 {
-    static const char* const SET_MODE_CURSOR_SHOW = "\x1b[?25h";
     sbuffer_insert(sb, SET_MODE_CURSOR_SHOW, 6);
 }
 
 static void update_cursor(struct StringBuffer* sb)
 {
-    static const char* const CURSOR_POSITION_Y_X = "\x1b[%d;%dH";
 
     char buf[32];
 

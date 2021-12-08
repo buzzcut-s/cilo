@@ -5,16 +5,16 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include <cilo/ansi_escape.h>
+
 static int move_cursor_to_bottom_right()
 {
-    static const char* const CUF_999_CUD_999 = "\x1b[999C\x1b[999B";
-    return write(STDOUT_FILENO, CUF_999_CUD_999, 12) == 12 ? 12
-                                                           : -1;
+    return write(STDOUT_FILENO, CURSOR_F999_D999, 12) == 12 ? 12
+                                                            : -1;
 }
 
 static int write_active_position()
 {
-    static const char* const DSR_ACTIVE_POSITION = "\x1b[6n";
     return write(STDOUT_FILENO, DSR_ACTIVE_POSITION, 4) == 4 ? 4
                                                              : -1;
 }
