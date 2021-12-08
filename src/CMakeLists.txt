@@ -13,7 +13,8 @@ target_sources(
          string_buffer.c
          window_size.c
          editor/input.c
-         editor/row.c)
+         editor/row.c
+         file_io.c)
 
 add_executable(cilo)
 

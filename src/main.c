@@ -1,11 +1,15 @@
 #include <cilo/editor/input.h>
 #include <cilo/editor/state.h>
+#include <cilo/file_io.h>
 #include <cilo/terminal.h>
 
 int main(int argc, const char* argv[])
 {
     enable_raw_mode();
     init_editor();
+
+    if (argc >= 2)
+        read_file(argv[1]);
 
     while (1)
     {

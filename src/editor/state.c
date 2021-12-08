@@ -7,6 +7,7 @@
 
 #include <unistd.h>
 
+#include <cilo/editor/row.h>
 #include <cilo/error.h>
 #include <cilo/string_buffer.h>
 #include <cilo/window_size.h>
@@ -15,8 +16,14 @@ struct EditorState editor;
 
 void init_editor()
 {
+    static const int ROWS_INITIAL_CAPACITY = 16;
+
     editor.cursor_x = 0;
     editor.cursor_y = 0;
+
+    editor.rows          = malloc(sizeof(struct EditorRow) * (ROWS_INITIAL_CAPACITY));
+    editor.num_rows      = 0;
+    editor.rows_capacity = ROWS_INITIAL_CAPACITY;
 
     if (get_window_size(&editor.screen_rows, &editor.screen_cols) == -1)
         die("get_window_size");
@@ -40,7 +47,7 @@ static void insert_padding(struct StringBuffer* sb, uint64_t padding)
         sbuffer_insert(sb, " ", 1);
 }
 
-static void print_welcome(struct StringBuffer* sb)
+static void display_welcome(struct StringBuffer* sb)
 {
     const char* welcome = "cilo editor";
 
@@ -56,14 +63,30 @@ static void print_welcome(struct StringBuffer* sb)
     sbuffer_insert(sb, welcome, welcome_length);
 }
 
+static void display_file(struct StringBuffer* sb, int row_idx)
+{
+    size_t length = editor.rows[row_idx].length;
+    if (length > editor.screen_cols)
+        length = editor.screen_cols;
+
+    sbuffer_insert(sb, editor.rows[row_idx].line, length);
+}
+
 static void draw_rows(struct StringBuffer* sb)
 {
     for (int y = 0; y < editor.screen_rows; y++)
     {
-        if (y == editor.screen_rows / 3)
-            print_welcome(sb);
+        if (y < editor.num_rows)
+        {
+            display_file(sb, y);
+        }
         else
-            sbuffer_insert(sb, "~", 1);
+        {
+            if (editor.num_rows == 0 && y == editor.screen_rows / 3)
+                display_welcome(sb);
+            else
+                sbuffer_insert(sb, "~", 1);
+        }
 
         clear_line(sb);
         if (y < editor.screen_rows - 1)
@@ -116,4 +139,21 @@ void redraw_editor()
 
     sbuffer_flush(&sb);
     sbuffer_free(&sb);
+}
+
+static void grow_rows_array()
+{
+    if (editor.num_rows + 1 > editor.rows_capacity)
+    {
+        editor.rows_capacity *= 2;
+        editor.rows = realloc(editor.rows,
+                              sizeof(struct EditorRow) * (editor.rows_capacity));
+    }
+}
+
+void store_line(const char* line, size_t length)
+{
+    grow_rows_array();
+    er_write_line(&editor.rows[editor.num_rows], line, length);
+    editor.num_rows++;
 }
