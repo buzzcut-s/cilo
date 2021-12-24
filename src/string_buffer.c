@@ -22,9 +22,15 @@ void sbuffer_insert(struct StringBuffer* sb, const char* s, size_t length)
     if (sb->length + length > sb->capacity)
     {
         sb->capacity = (sb->capacity * 2) + length;
-        sb->buffer   = realloc(sb->buffer, sb->capacity);
-        if (sb->buffer == NULL)
+
+        char* new_buffer = realloc(sb->buffer, sb->capacity);
+        if (new_buffer == NULL)
+        {
+            free(sb->buffer);
+            sb->buffer = NULL;
             return;
+        }
+        sb->buffer = new_buffer;
     }
 
     memcpy(&sb->buffer[sb->length], s, length);
