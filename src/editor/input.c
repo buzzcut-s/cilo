@@ -94,9 +94,9 @@ static int read_key()
 
 static void move_cursor(int key)
 {
-    const struct EditorRow* current_row = (editor.cursor_y < editor.num_rows)
-                                            ? &editor.rows[editor.cursor_y]
-                                            : NULL;
+    struct EditorRow* current_row = (editor.cursor_y < editor.num_rows)
+                                      ? &editor.rows[editor.cursor_y]
+                                      : NULL;
     switch (key)
     {
         case ArrowUp:
@@ -119,6 +119,15 @@ static void move_cursor(int key)
                 editor.cursor_x++;
             break;
     }
+
+    current_row = (editor.cursor_y < editor.num_rows)
+                    ? &editor.rows[editor.cursor_y]
+                    : NULL;
+
+    const int row_length = current_row ? current_row->length
+                                       : 0;
+    if (editor.cursor_x > row_length)
+        editor.cursor_x = row_length;
 }
 
 void process_keypress()
