@@ -4,6 +4,7 @@
 
 #include <unistd.h>
 
+#include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
 #include <cilo/error.h>
 #include <cilo/terminal.h>
@@ -93,6 +94,9 @@ static int read_key()
 
 static void move_cursor(int key)
 {
+    const struct EditorRow* current_row = (editor.cursor_y < editor.num_rows)
+                                            ? &editor.rows[editor.cursor_y]
+                                            : NULL;
     switch (key)
     {
         case ArrowUp:
@@ -111,7 +115,8 @@ static void move_cursor(int key)
             break;
 
         case ArrowRight:
-            editor.cursor_x++;
+            if (current_row && editor.cursor_x < current_row->length)
+                editor.cursor_x++;
             break;
     }
 }
