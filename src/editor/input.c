@@ -111,8 +111,7 @@ static void move_cursor(int key)
             break;
 
         case ArrowRight:
-            if (editor.cursor_x != editor.screen_cols - 1)
-                editor.cursor_x++;
+            editor.cursor_x++;
             break;
     }
 }

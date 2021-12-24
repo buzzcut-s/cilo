@@ -14,6 +14,7 @@ struct EditorState
     int cursor_y;
 
     int row_offset;
+    int col_offset;
 
     uint16_t screen_rows;
     uint16_t screen_cols;

@@ -20,6 +20,11 @@ static inline size_t min(size_t a, size_t b)
     return (a < b) ? a : b;
 }
 
+static inline size_t max(size_t a, size_t b)
+{
+    return (a > b) ? a : b;
+}
+
 void init_editor()
 {
     static const int ROWS_INITIAL_CAPACITY = 16;
@@ -28,6 +33,7 @@ void init_editor()
     editor.cursor_y = 0;
 
     editor.row_offset = 0;
+    editor.col_offset = 0;
 
     editor.rows          = malloc(sizeof(struct EditorRow) * (ROWS_INITIAL_CAPACITY));
     editor.num_rows      = 0;
@@ -69,9 +75,12 @@ static void display_welcome(struct StringBuffer* sb)
 
 static void display_file(struct StringBuffer* sb, int row_idx)
 {
-    const size_t length = min(editor.rows[row_idx].length, editor.screen_cols);
+    const size_t length = min(
+      max(
+        editor.rows[row_idx].length - editor.col_offset, 0),
+      editor.screen_cols);
 
-    sbuffer_insert(sb, editor.rows[row_idx].line, length);
+    sbuffer_insert(sb, &editor.rows[row_idx].line[editor.col_offset], length);
 }
 
 static void draw_rows(struct StringBuffer* sb)
@@ -119,7 +128,7 @@ static void update_cursor(struct StringBuffer* sb)
 
     const int buf_len = snprintf(buf, sizeof(buf), CURSOR_POSITION_Y_X,
                                  (editor.cursor_y - editor.row_offset) + 1,
-                                 editor.cursor_x + 1);
+                                 (editor.cursor_x - editor.col_offset) + 1);
 
     sbuffer_insert(sb, buf, buf_len);
 }
@@ -131,6 +140,12 @@ void update_scroll()
 
     if (editor.cursor_y >= editor.row_offset + editor.screen_rows)
         editor.row_offset = editor.cursor_y - editor.screen_rows + 1;
+
+    if (editor.cursor_x < editor.col_offset)
+        editor.col_offset = editor.cursor_x;
+
+    if (editor.cursor_x >= editor.col_offset + editor.screen_cols)
+        editor.col_offset = editor.cursor_x - editor.screen_cols + 1;
 }
 
 void redraw_editor()
