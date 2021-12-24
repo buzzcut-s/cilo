@@ -5,8 +5,8 @@
 
 struct EditorRow
 {
-    char*  line;
-    size_t length;
+    char*  line_chars;
+    size_t line_length;
 };
 
 void er_store_line(struct EditorRow* er, const char* line, size_t length);

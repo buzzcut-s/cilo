@@ -5,8 +5,8 @@
 
 void er_store_line(struct EditorRow* er, const char* line, size_t length)
 {
-    er->length = length;
-    er->line   = malloc(length + 1);
-    memcpy(er->line, line, length);
-    er->line[length] = '\0';
+    er->line_length = length;
+    er->line_chars  = malloc(length + 1);
+    memcpy(er->line_chars, line, length);
+    er->line_chars[length] = '\0';
 }

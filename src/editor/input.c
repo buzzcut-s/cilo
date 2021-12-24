@@ -105,7 +105,7 @@ static void snap_cursor_to_end()
     const struct EditorRow* cr = get_current_row();
 
     editor.cursor_x = MIN(editor.cursor_x,
-                          cr ? cr->length : 0);
+                          cr ? cr->line_length : 0);
 }
 
 static void move_cursor(int key)
@@ -125,7 +125,7 @@ static void move_cursor(int key)
             else if (editor.cursor_y > 0)
             {
                 editor.cursor_y--;
-                editor.cursor_x = editor.rows[editor.cursor_y].length;
+                editor.cursor_x = editor.rows[editor.cursor_y].line_length;
             }
             break;
 
@@ -135,9 +135,9 @@ static void move_cursor(int key)
             break;
 
         case ArrowRight:
-            if (cr && editor.cursor_x < cr->length)
+            if (cr && editor.cursor_x < cr->line_length)
                 editor.cursor_x++;
-            else if (cr && editor.cursor_x == cr->length)
+            else if (cr && editor.cursor_x == cr->line_length)
             {
                 editor.cursor_y++;
                 editor.cursor_x = 0;

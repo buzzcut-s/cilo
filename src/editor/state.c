@@ -68,10 +68,10 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
 {
     const size_t length = MIN(
       MAX(
-        editor.rows[row_idx].length - editor.col_offset, 0),
+        editor.rows[row_idx].line_length - editor.col_offset, 0),
       editor.screen_cols);
 
-    sbuffer_insert(sb, &editor.rows[row_idx].line[editor.col_offset], length);
+    sbuffer_insert(sb, &editor.rows[row_idx].line_chars[editor.col_offset], length);
 }
 
 static void draw_rows(struct StringBuffer* sb)
