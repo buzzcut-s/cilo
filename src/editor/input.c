@@ -8,6 +8,7 @@
 #include <cilo/editor/state.h>
 #include <cilo/error.h>
 #include <cilo/terminal.h>
+#include <cilo/utils.h>
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
 
@@ -124,10 +125,8 @@ static void move_cursor(int key)
                     ? &editor.rows[editor.cursor_y]
                     : NULL;
 
-    const size_t row_length = current_row ? current_row->length
-                                          : 0;
-    if (editor.cursor_x > row_length)
-        editor.cursor_x = row_length;
+    editor.cursor_x = MIN(editor.cursor_x,
+                          current_row ? current_row->length : 0);
 }
 
 void process_keypress()

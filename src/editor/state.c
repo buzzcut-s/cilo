@@ -11,19 +11,10 @@
 #include <cilo/editor/row.h>
 #include <cilo/error.h>
 #include <cilo/string_buffer.h>
+#include <cilo/utils.h>
 #include <cilo/window_size.h>
 
 struct EditorState editor;
-
-static inline size_t min(size_t a, size_t b)
-{
-    return (a < b) ? a : b;
-}
-
-static inline size_t max(size_t a, size_t b)
-{
-    return (a > b) ? a : b;
-}
 
 void init_editor()
 {
@@ -64,7 +55,7 @@ static void display_welcome(struct StringBuffer* sb)
 {
     static const char* const WELCOME = "cilo editor";
 
-    const size_t length = min(strlen(WELCOME), editor.screen_cols);
+    const size_t length = MIN(strlen(WELCOME), editor.screen_cols);
 
     const size_t padding_till_centre =
       (editor.screen_cols - length) / 2;
@@ -75,8 +66,8 @@ static void display_welcome(struct StringBuffer* sb)
 
 static void display_file(struct StringBuffer* sb, size_t row_idx)
 {
-    const size_t length = min(
-      max(
+    const size_t length = MIN(
+      MAX(
         editor.rows[row_idx].length - editor.col_offset, 0),
       editor.screen_cols);
 
