@@ -73,7 +73,7 @@ static void display_welcome(struct StringBuffer* sb)
     sbuffer_insert(sb, WELCOME, length);
 }
 
-static void display_file(struct StringBuffer* sb, int row_idx)
+static void display_file(struct StringBuffer* sb, size_t row_idx)
 {
     const size_t length = min(
       max(
@@ -85,9 +85,9 @@ static void display_file(struct StringBuffer* sb, int row_idx)
 
 static void draw_rows(struct StringBuffer* sb)
 {
-    for (int y = 0; y < editor.screen_rows; y++)
+    for (size_t y = 0; y < editor.screen_rows; y++)
     {
-        const int current_row = y + editor.row_offset;
+        const size_t current_row = y + editor.row_offset;
 
         if (current_row < editor.num_rows)
         {

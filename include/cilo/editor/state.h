@@ -10,11 +10,11 @@ struct EditorState
 {
     struct termios original_state;
 
-    int cursor_x;
-    int cursor_y;
+    size_t cursor_x;
+    size_t cursor_y;
 
-    int row_offset;
-    int col_offset;
+    size_t row_offset;
+    size_t col_offset;
 
     uint16_t screen_rows;
     uint16_t screen_cols;

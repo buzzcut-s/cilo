@@ -124,8 +124,8 @@ static void move_cursor(int key)
                     ? &editor.rows[editor.cursor_y]
                     : NULL;
 
-    const int row_length = current_row ? current_row->length
-                                       : 0;
+    const size_t row_length = current_row ? current_row->length
+                                          : 0;
     if (editor.cursor_x > row_length)
         editor.cursor_x = row_length;
 }

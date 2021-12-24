@@ -9,7 +9,7 @@
 
 #define CURSOR_POSITION_1_1 "\x1b[H"
 
-#define CURSOR_POSITION_Y_X "\x1b[%d;%dH"
+#define CURSOR_POSITION_Y_X "\x1b[%zu;%zuH"
 
 #define SET_MODE_CURSOR_HIDE "\x1b[?25l"
 
