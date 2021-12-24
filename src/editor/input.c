@@ -100,6 +100,14 @@ static struct EditorRow* get_current_row()
              : NULL;
 }
 
+static void snap_cursor_to_end()
+{
+    struct EditorRow* cr = get_current_row();
+
+    editor.cursor_x = MIN(editor.cursor_x,
+                          cr ? cr->length : 0);
+}
+
 static void move_cursor(int key)
 {
     struct EditorRow* cr = get_current_row();
@@ -127,10 +135,7 @@ static void move_cursor(int key)
             break;
     }
 
-    cr = get_current_row();
-
-    editor.cursor_x = MIN(editor.cursor_x,
-                          cr ? cr->length : 0);
+    snap_cursor_to_end();
 }
 
 void process_keypress()
