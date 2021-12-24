@@ -27,6 +27,8 @@ void init_editor()
     editor.cursor_x = 0;
     editor.cursor_y = 0;
 
+    editor.row_offset = 0;
+
     editor.rows          = malloc(sizeof(struct EditorRow) * (ROWS_INITIAL_CAPACITY));
     editor.num_rows      = 0;
     editor.rows_capacity = ROWS_INITIAL_CAPACITY;
@@ -76,9 +78,11 @@ static void draw_rows(struct StringBuffer* sb)
 {
     for (int y = 0; y < editor.screen_rows; y++)
     {
-        if (y < editor.num_rows)
+        const int current_row = y + editor.row_offset;
+
+        if (current_row < editor.num_rows)
         {
-            display_file(sb, y);
+            display_file(sb, current_row);
         }
         else
         {
@@ -114,13 +118,25 @@ static void update_cursor(struct StringBuffer* sb)
     char buf[32];
 
     const int buf_len = snprintf(buf, sizeof(buf), CURSOR_POSITION_Y_X,
-                                 editor.cursor_y + 1, editor.cursor_x + 1);
+                                 (editor.cursor_y - editor.row_offset) + 1,
+                                 editor.cursor_x + 1);
 
     sbuffer_insert(sb, buf, buf_len);
 }
 
+void update_scroll()
+{
+    if (editor.cursor_y < editor.row_offset)
+        editor.row_offset = editor.cursor_y;
+
+    if (editor.cursor_y >= editor.row_offset + editor.screen_rows)
+        editor.row_offset = editor.cursor_y - editor.screen_rows + 1;
+}
+
 void redraw_editor()
 {
+    update_scroll();
+
     struct StringBuffer sb = BUFFER_ZERO;
     sbuffer_init(&sb);
 

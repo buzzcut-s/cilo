@@ -106,7 +106,7 @@ static void move_cursor(int key)
             break;
 
         case ArrowDown:
-            if (editor.cursor_y != editor.screen_rows - 1)
+            if (editor.cursor_y < editor.num_rows)
                 editor.cursor_y++;
             break;
 
