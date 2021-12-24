@@ -93,11 +93,17 @@ static int read_key()
     return c;
 }
 
+static struct EditorRow* get_current_row()
+{
+    return (editor.cursor_y < editor.num_rows)
+             ? &editor.rows[editor.cursor_y]
+             : NULL;
+}
+
 static void move_cursor(int key)
 {
-    struct EditorRow* current_row = (editor.cursor_y < editor.num_rows)
-                                      ? &editor.rows[editor.cursor_y]
-                                      : NULL;
+    struct EditorRow* cr = get_current_row();
+
     switch (key)
     {
         case ArrowUp:
@@ -116,17 +122,15 @@ static void move_cursor(int key)
             break;
 
         case ArrowRight:
-            if (current_row && editor.cursor_x < current_row->length)
+            if (cr && editor.cursor_x < cr->length)
                 editor.cursor_x++;
             break;
     }
 
-    current_row = (editor.cursor_y < editor.num_rows)
-                    ? &editor.rows[editor.cursor_y]
-                    : NULL;
+    cr = get_current_row();
 
     editor.cursor_x = MIN(editor.cursor_x,
-                          current_row ? current_row->length : 0);
+                          cr ? cr->length : 0);
 }
 
 void process_keypress()
