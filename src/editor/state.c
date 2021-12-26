@@ -36,8 +36,8 @@ void editor_state_init()
 
     editor.filename = NULL;
 
-    editor.help_msg_time = 0;
-    editor.help_msg[0]   = '\0';
+    editor.status_msg_time = 0;
+    editor.status_msg[0]   = '\0';
 
     if (get_window_size(&editor.screen_rows, &editor.screen_cols) == -1)
         die("get_window_size");
@@ -195,15 +195,15 @@ static void draw_status_bar(struct StringBuffer* sb)
 
 static void draw_message_bar(struct StringBuffer* sb)
 {
-    static const int HELP_MSG_TIMEOUT = 5;
+    static const int STATUS_MSG_TIMEOUT = 5;
 
     sbuffer_insert(sb, "\r\n", 2);
     clear_line(sb);
 
-    const size_t msg_len = MIN(strlen(editor.help_msg), editor.screen_cols);
+    const size_t msg_len = MIN(strlen(editor.status_msg), editor.screen_cols);
 
-    if (msg_len && (time(NULL) - editor.help_msg_time < HELP_MSG_TIMEOUT))
-        sbuffer_insert(sb, editor.help_msg, msg_len);
+    if (msg_len && (time(NULL) - editor.status_msg_time < STATUS_MSG_TIMEOUT))
+        sbuffer_insert(sb, editor.status_msg, msg_len);
 }
 
 void editor_state_redraw()
@@ -247,12 +247,12 @@ void editor_state_store_line(const char* line, size_t length)
     editor.num_rows++;
 }
 
-void editor_state_set_help_message(const char* format, ...)
+void editor_state_set_status_msg(const char* format, ...)
 {
     va_list ap;
     va_start(ap, format);
-    vsnprintf(editor.help_msg, sizeof(editor.help_msg), format, ap);
+    vsnprintf(editor.status_msg, sizeof(editor.status_msg), format, ap);
     va_end(ap);
 
-    editor.help_msg_time = time(NULL);
+    editor.status_msg_time = time(NULL);
 }

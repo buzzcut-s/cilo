@@ -29,8 +29,8 @@ struct EditorState
 
     const char* filename;
 
-    time_t help_msg_time;
-    char   help_msg[80];
+    time_t status_msg_time;
+    char   status_msg[80];
 };
 
 extern struct EditorState editor;
@@ -41,6 +41,6 @@ void editor_state_redraw();
 
 void editor_state_store_line(const char* line, size_t length);
 
-void editor_state_set_help_message(const char* format, ...);
+void editor_state_set_status_msg(const char* format, ...);
 
 #endif  // EDITOR_STATE_H
