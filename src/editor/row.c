@@ -81,3 +81,17 @@ void er_delete_character(struct EditorRow* row, size_t at)
 
     er_update_render(row);
 }
+
+void er_append_string(struct EditorRow* row, char* s, size_t length)
+{
+    char* new_line_chars = realloc(row->line_chars, row->line_length + length + 1);
+    if (new_line_chars == NULL)
+        die("er_insert_character");
+
+    row->line_chars = new_line_chars;
+
+    memcpy(&row->line_chars[row->line_length], s, length);
+    row->line_length += length;
+
+    er_update_render(row);
+}
