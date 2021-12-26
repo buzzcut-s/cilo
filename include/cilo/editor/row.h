@@ -14,4 +14,6 @@ struct EditorRow
 
 void er_store_line(struct EditorRow* er, const char* line, size_t length);
 
+void er_update_render(struct EditorRow* row);
+
 #endif  // EDITOR_ROW_H

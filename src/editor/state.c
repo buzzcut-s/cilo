@@ -227,39 +227,6 @@ void editor_state_redraw()
     sbuffer_free(&sb);
 }
 
-static void update_render(struct EditorRow* row)
-{
-    size_t n_tabs = 0;
-
-    for (size_t i = 0; i < row->line_length; i++)
-    {
-        if (row->line_chars[i] == '\t')
-            n_tabs++;
-    }
-
-    row->render_chars = malloc(row->line_length + n_tabs * (CILO_TAB_STOP - 1) + 1);
-    if (row->render_chars == NULL)
-        die("update_render");
-
-    size_t idx = 0;
-    for (size_t j = 0; j < row->line_length; j++)
-    {
-        if (row->line_chars[j] == '\t')
-        {
-            row->render_chars[idx++] = ' ';
-            while (idx % CILO_TAB_STOP != 0)
-                row->render_chars[idx++] = ' ';
-        }
-        else
-        {
-            row->render_chars[idx++] = row->line_chars[j];
-        }
-    }
-
-    row->render_length     = idx;
-    row->render_chars[idx] = '\0';
-}
-
 void editor_state_store_line(const char* line, size_t length)
 {
     if (editor.num_rows + 1 > editor.rows_capacity)
@@ -275,8 +242,7 @@ void editor_state_store_line(const char* line, size_t length)
     }
 
     er_store_line(&editor.rows[editor.num_rows], line, length);
-
-    update_render(&editor.rows[editor.num_rows]);
+    er_update_render(&editor.rows[editor.num_rows]);
 
     editor.num_rows++;
 }
