@@ -231,8 +231,11 @@ void editor_state_redraw()
     sbuffer_free(&sb);
 }
 
-void editor_state_store_line(const char* line, size_t length)
+void editor_state_insert_line(size_t at, const char* line, size_t length)
 {
+    if (at > editor.num_rows)
+        return;
+
     if (editor.num_rows + 1 > editor.rows_capacity)
     {
         editor.rows_capacity *= 2;
@@ -245,8 +248,11 @@ void editor_state_store_line(const char* line, size_t length)
         editor.rows = new_rows;
     }
 
-    er_store_line(&editor.rows[editor.num_rows], line, length);
-    er_update_render(&editor.rows[editor.num_rows]);
+    memmove(&editor.rows[at + 1], &editor.rows[at],
+            sizeof(struct EditorRow) * (editor.num_rows - at));
+
+    er_store_line(&editor.rows[at], line, length);
+    er_update_render(&editor.rows[at]);
 
     editor.num_rows++;
     editor.is_dirty = true;

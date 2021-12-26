@@ -38,7 +38,7 @@ void file_io_read(const char* path)
     while ((length = getline(&line, &line_capacity, file)) != -1)
     {
         length = trim_newline(line, length);
-        editor_state_store_line(line, length);
+        editor_state_insert_line(editor.num_rows, line, length);
     }
 
     free(line);

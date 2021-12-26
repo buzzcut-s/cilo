@@ -8,7 +8,7 @@
 void editor_op_insert_char(int c)
 {
     if (editor.cursor_y == editor.num_rows)
-        editor_state_store_line("", 0);
+        editor_state_insert_line(editor.num_rows, "", 0);
 
     er_insert_character(&editor.rows[editor.cursor_y], editor.cursor_x, c);
     editor.is_dirty = true;

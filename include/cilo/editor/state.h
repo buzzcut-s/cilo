@@ -42,7 +42,7 @@ void editor_state_init();
 
 void editor_state_redraw();
 
-void editor_state_store_line(const char* line, size_t length);
+void editor_state_insert_line(size_t at, const char* line, size_t length);
 
 void editor_state_delete_line(size_t at);
 
