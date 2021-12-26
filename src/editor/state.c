@@ -1,6 +1,7 @@
 #include "cilo/editor/state.h"
 
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +22,8 @@ struct EditorState editor;
 void editor_state_init()
 {
     static const int ROWS_INITIAL_CAPACITY = 16;
+
+    editor.is_dirty = false;
 
     editor.cursor_x = 0;
     editor.cursor_y = 0;
@@ -166,9 +169,10 @@ static void draw_status_bar(struct StringBuffer* sb)
     sbuffer_insert(sb, GRAPHIC_RENDITION_INVERTED, 4);
 
     char left_status[80];
-    int  left_len = snprintf(left_status, sizeof(left_status), "%.20s - %zu lines",
+    int  left_len = snprintf(left_status, sizeof(left_status), "%.20s - %zu lines %s",
                             editor.filename ? editor.filename : "[No Name]",
-                             editor.num_rows);
+                             editor.num_rows,
+                            editor.is_dirty ? "(modified)" : "");
 
     left_len = MIN(left_len, editor.screen_cols);
     sbuffer_insert(sb, left_status, left_len);
@@ -245,6 +249,7 @@ void editor_state_store_line(const char* line, size_t length)
     er_update_render(&editor.rows[editor.num_rows]);
 
     editor.num_rows++;
+    editor.is_dirty = true;
 }
 
 void editor_state_set_status_msg(const char* format, ...)

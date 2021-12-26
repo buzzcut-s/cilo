@@ -1,6 +1,7 @@
 #ifndef EDITOR_STATE_H
 #define EDITOR_STATE_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
@@ -10,6 +11,8 @@
 struct EditorState
 {
     struct termios original_state;
+
+    bool is_dirty;
 
     uint16_t screen_rows;
     uint16_t screen_cols;

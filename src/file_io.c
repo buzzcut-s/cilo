@@ -1,6 +1,7 @@
 #include "cilo/file_io.h"
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,6 +43,8 @@ void file_io_read(const char* path)
 
     free(line);
     fclose(file);
+
+    editor.is_dirty = false;
 }
 
 static char* er_to_string(size_t* out_buf_len)
@@ -85,6 +88,7 @@ void file_io_save()
             {
                 close(fd);
                 free(buf);
+                editor.is_dirty = false;
                 editor_state_set_status_msg("%d bytes written to disk", buf_len);
                 return;
             }
