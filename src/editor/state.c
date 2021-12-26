@@ -65,11 +65,11 @@ static void display_welcome(struct StringBuffer* sb)
 
 static void display_file(struct StringBuffer* sb, size_t row_idx)
 {
-    const int64_t chars_to_right = editor.rows[row_idx].line_length - editor.col_offset;
+    const int64_t chars_to_right = editor.rows[row_idx].render_length - editor.col_offset;
 
     const size_t length = MIN(MAX(chars_to_right, 0), editor.screen_cols);
 
-    sbuffer_insert(sb, &editor.rows[row_idx].line_chars[editor.col_offset], length);
+    sbuffer_insert(sb, &editor.rows[row_idx].render_chars[editor.col_offset], length);
 }
 
 static void draw_rows(struct StringBuffer* sb)
@@ -156,6 +156,18 @@ void redraw_editor()
     sbuffer_free(&sb);
 }
 
+static void update_render(struct EditorRow* row)
+{
+    row->render_chars = malloc(row->line_length + 1);
+
+    size_t idx = 0;
+    for (size_t j = 0; j < row->line_length; j++)
+        row->render_chars[idx++] = row->line_chars[j];
+
+    row->render_length     = idx;
+    row->render_chars[idx] = '\0';
+}
+
 void store_line(const char* line, size_t length)
 {
     if (editor.num_rows + 1 > editor.rows_capacity)
@@ -166,5 +178,8 @@ void store_line(const char* line, size_t length)
     }
 
     er_store_line(&editor.rows[editor.num_rows], line, length);
+
+    update_render(&editor.rows[editor.num_rows]);
+
     editor.num_rows++;
 }
