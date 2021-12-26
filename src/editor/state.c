@@ -57,8 +57,7 @@ static void display_welcome(struct StringBuffer* sb)
 
     const size_t length = MIN(strlen(WELCOME), editor.screen_cols);
 
-    const size_t padding_till_centre =
-      (editor.screen_cols - length) / 2;
+    const size_t padding_till_centre = (editor.screen_cols - length) / 2;
 
     insert_padding(sb, padding_till_centre);
     sbuffer_insert(sb, WELCOME, length);
@@ -66,10 +65,9 @@ static void display_welcome(struct StringBuffer* sb)
 
 static void display_file(struct StringBuffer* sb, size_t row_idx)
 {
-    const size_t length = MIN(
-      MAX(
-        editor.rows[row_idx].line_length - editor.col_offset, 0),
-      editor.screen_cols);
+    const int64_t chars_to_right = editor.rows[row_idx].line_length - editor.col_offset;
+
+    const size_t length = MIN(MAX(chars_to_right, 0), editor.screen_cols);
 
     sbuffer_insert(sb, &editor.rows[row_idx].line_chars[editor.col_offset], length);
 }
@@ -158,7 +156,7 @@ void redraw_editor()
     sbuffer_free(&sb);
 }
 
-static void grow_rows_array()
+void store_line(const char* line, size_t length)
 {
     if (editor.num_rows + 1 > editor.rows_capacity)
     {
@@ -166,11 +164,7 @@ static void grow_rows_array()
         editor.rows = realloc(editor.rows,
                               sizeof(struct EditorRow) * (editor.rows_capacity));
     }
-}
 
-void store_line(const char* line, size_t length)
-{
-    grow_rows_array();
     er_store_line(&editor.rows[editor.num_rows], line, length);
     editor.num_rows++;
 }
