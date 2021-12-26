@@ -187,6 +187,8 @@ static void update_render(struct EditorRow* row)
     }
 
     row->render_chars = malloc(row->line_length + n_tabs * (CILO_TAB_STOP - 1) + 1);
+    if (row->render_chars == NULL)
+        die("update_render");
 
     size_t idx = 0;
     for (size_t j = 0; j < row->line_length; j++)
@@ -212,8 +214,13 @@ void store_line(const char* line, size_t length)
     if (editor.num_rows + 1 > editor.rows_capacity)
     {
         editor.rows_capacity *= 2;
-        editor.rows = realloc(editor.rows,
-                              sizeof(struct EditorRow) * (editor.rows_capacity));
+
+        struct EditorRow* new_rows = realloc(
+          editor.rows, sizeof(struct EditorRow) * (editor.rows_capacity));
+        if (new_rows == NULL)
+            die("store_line");
+
+        editor.rows = new_rows;
     }
 
     er_store_line(&editor.rows[editor.num_rows], line, length);

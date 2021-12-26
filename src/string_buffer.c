@@ -6,13 +6,15 @@
 
 #include <unistd.h>
 
+#include <cilo/error.h>
+
 void sbuffer_init(struct StringBuffer* sb)
 {
     static const size_t BUFFER_INITIAL_CAPACITY = 256;
 
     sb->buffer = malloc(BUFFER_INITIAL_CAPACITY);
     if (sb->buffer == NULL)
-        return;
+        die("sbuffer_init");
 
     sb->capacity = BUFFER_INITIAL_CAPACITY;
 }
@@ -25,11 +27,8 @@ void sbuffer_insert(struct StringBuffer* sb, const char* s, size_t length)
 
         char* new_buffer = realloc(sb->buffer, sb->capacity);
         if (new_buffer == NULL)
-        {
-            free(sb->buffer);
-            sb->buffer = NULL;
-            return;
-        }
+            die("sbuffer_insert");
+
         sb->buffer = new_buffer;
     }
 
