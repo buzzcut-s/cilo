@@ -33,7 +33,10 @@ void editor_state_init()
     editor.row_offset = 0;
     editor.col_offset = 0;
 
-    editor.rows          = malloc(sizeof(struct EditorRow) * (ROWS_INITIAL_CAPACITY));
+    editor.rows = malloc(sizeof(struct EditorRow) * (ROWS_INITIAL_CAPACITY));
+    if (editor.rows == NULL)
+        die("editor_state_init");
+
     editor.num_rows      = 0;
     editor.rows_capacity = ROWS_INITIAL_CAPACITY;
 
