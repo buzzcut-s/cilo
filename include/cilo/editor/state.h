@@ -10,6 +10,9 @@ struct EditorState
 {
     struct termios original_state;
 
+    uint16_t screen_rows;
+    uint16_t screen_cols;
+
     size_t cursor_x;
     size_t cursor_y;
 
@@ -18,13 +21,12 @@ struct EditorState
     size_t row_offset;
     size_t col_offset;
 
-    uint16_t screen_rows;
-    uint16_t screen_cols;
-
     struct EditorRow* rows;
 
     size_t num_rows;
     size_t rows_capacity;
+
+    const char* filename;
 };
 
 extern struct EditorState editor;

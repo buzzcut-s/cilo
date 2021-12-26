@@ -33,8 +33,12 @@ void init_editor()
     editor.num_rows      = 0;
     editor.rows_capacity = ROWS_INITIAL_CAPACITY;
 
+    editor.filename = NULL;
+
     if (get_window_size(&editor.screen_rows, &editor.screen_cols) == -1)
         die("get_window_size");
+
+    editor.screen_rows--;
 }
 
 static void clear_line(struct StringBuffer* sb)
@@ -91,8 +95,7 @@ static void draw_rows(struct StringBuffer* sb)
         }
 
         clear_line(sb);
-        if (y < editor.screen_rows - 1)
-            sbuffer_insert(sb, "\r\n", 2);
+        sbuffer_insert(sb, "\r\n", 2);
     }
 }
 
@@ -154,6 +157,38 @@ void update_scroll()
         editor.col_offset = editor.render_x - editor.screen_cols + 1;
 }
 
+static void draw_status_bar(struct StringBuffer* sb)
+{
+    sbuffer_insert(sb, GRAPHIC_RENDITION_INVERTED, 4);
+
+    char left_status[80];
+    int  left_len = snprintf(left_status, sizeof(left_status), "%.20s - %zu lines",
+                            editor.filename ? editor.filename : "[No Name]",
+                             editor.num_rows);
+
+    left_len = MIN(left_len, editor.screen_cols);
+    sbuffer_insert(sb, left_status, left_len);
+
+    char      right_status[80];
+    const int right_len = snprintf(right_status, sizeof(right_status), "%zu/%zu",
+                                   editor.cursor_y + 1,
+                                   editor.num_rows);
+
+    while (left_len < editor.screen_cols)
+    {
+        if (editor.screen_cols - left_len == right_len)
+        {
+            sbuffer_insert(sb, right_status, right_len);
+            break;
+        }
+
+        sbuffer_insert(sb, " ", 1);
+        left_len++;
+    }
+
+    sbuffer_insert(sb, GRAPHIC_RENDITION_NORMAL, 3);
+}
+
 void redraw_editor()
 {
     update_scroll();
@@ -165,6 +200,7 @@ void redraw_editor()
     reset_cursor(&sb);
 
     draw_rows(&sb);
+    draw_status_bar(&sb);
 
     update_cursor(&sb);
     show_cursor(&sb);

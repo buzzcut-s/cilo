@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <cilo/editor/state.h>
 #include <cilo/error.h>
@@ -18,6 +19,8 @@ static ssize_t trim_newline(const char* line, ssize_t length)
 
 void read_file(const char* path)
 {
+    editor.filename = strdup(path);
+
     FILE* file = fopen(path, "r");
     if (!file)
         die("fopen");

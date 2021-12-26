@@ -17,4 +17,8 @@
 
 #define CURSOR_F999_D999 "\x1b[999C\x1b[999B"
 
+#define GRAPHIC_RENDITION_INVERTED "\x1b[7m"
+
+#define GRAPHIC_RENDITION_NORMAL "\x1b[m"
+
 #endif  // ANSI_ESCAPE_H
