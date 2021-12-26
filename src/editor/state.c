@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include <cilo/ansi_escape.h>
+#include <cilo/common.h>
 #include <cilo/editor/row.h>
 #include <cilo/error.h>
 #include <cilo/string_buffer.h>
@@ -158,11 +159,30 @@ void redraw_editor()
 
 static void update_render(struct EditorRow* row)
 {
-    row->render_chars = malloc(row->line_length + 1);
+    size_t n_tabs = 0;
+
+    for (size_t i = 0; i < row->line_length; i++)
+    {
+        if (row->line_chars[i] == '\t')
+            n_tabs++;
+    }
+
+    row->render_chars = malloc(row->line_length + n_tabs * (CILO_TAB_STOP - 1) + 1);
 
     size_t idx = 0;
     for (size_t j = 0; j < row->line_length; j++)
-        row->render_chars[idx++] = row->line_chars[j];
+    {
+        if (row->line_chars[j] == '\t')
+        {
+            row->render_chars[idx++] = ' ';
+            while (idx % CILO_TAB_STOP != 0)
+                row->render_chars[idx++] = ' ';
+        }
+        else
+        {
+            row->render_chars[idx++] = row->line_chars[j];
+        }
+    }
 
     row->render_length     = idx;
     row->render_chars[idx] = '\0';
