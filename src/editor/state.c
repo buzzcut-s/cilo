@@ -1,5 +1,6 @@
 #include "cilo/editor/state.h"
 
+#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,10 +36,13 @@ void init_editor()
 
     editor.filename = NULL;
 
+    editor.help_msg_time = 0;
+    editor.help_msg[0]   = '\0';
+
     if (get_window_size(&editor.screen_rows, &editor.screen_cols) == -1)
         die("get_window_size");
 
-    editor.screen_rows--;
+    editor.screen_rows -= 2;
 }
 
 static void clear_line(struct StringBuffer* sb)
@@ -189,6 +193,19 @@ static void draw_status_bar(struct StringBuffer* sb)
     sbuffer_insert(sb, GRAPHIC_RENDITION_NORMAL, 3);
 }
 
+static void draw_message_bar(struct StringBuffer* sb)
+{
+    static const int HELP_MSG_TIMEOUT = 5;
+
+    sbuffer_insert(sb, "\r\n", 2);
+    clear_line(sb);
+
+    const size_t msg_len = MIN(strlen(editor.help_msg), editor.screen_cols);
+
+    if (msg_len && (time(NULL) - editor.help_msg_time < HELP_MSG_TIMEOUT))
+        sbuffer_insert(sb, editor.help_msg, msg_len);
+}
+
 void redraw_editor()
 {
     update_scroll();
@@ -201,6 +218,7 @@ void redraw_editor()
 
     draw_rows(&sb);
     draw_status_bar(&sb);
+    draw_message_bar(&sb);
 
     update_cursor(&sb);
     show_cursor(&sb);
@@ -261,4 +279,14 @@ void store_line(const char* line, size_t length)
     update_render(&editor.rows[editor.num_rows]);
 
     editor.num_rows++;
+}
+
+void editor_set_help_message(const char* format, ...)
+{
+    va_list ap;
+    va_start(ap, format);
+    vsnprintf(editor.help_msg, sizeof(editor.help_msg), format, ap);
+    va_end(ap);
+
+    editor.help_msg_time = time(NULL);
 }

@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <time.h>
 
 #include <termios.h>
 
@@ -27,6 +28,9 @@ struct EditorState
     size_t rows_capacity;
 
     const char* filename;
+
+    time_t help_msg_time;
+    char   help_msg[80];
 };
 
 extern struct EditorState editor;
@@ -36,5 +40,7 @@ void init_editor();
 void redraw_editor();
 
 void store_line(const char* line, size_t length);
+
+void editor_set_help_message(const char* format, ...);
 
 #endif  // EDITOR_STATE_H

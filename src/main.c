@@ -11,6 +11,8 @@ int main(int argc, const char* argv[])
     if (argc >= 2)
         read_file(argv[1]);
 
+    editor_set_help_message("HELP: Ctrl-Q = quit");
+
     while (1)
     {
         redraw_editor();
