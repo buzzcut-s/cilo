@@ -7,12 +7,16 @@
 #include <cilo/error.h>
 #include <cilo/utils.h>
 
-void er_store_line(struct EditorRow* er, const char* line, size_t length)
+void er_store_line(struct EditorRow* row, const char* line, size_t length)
 {
-    er->line_length = length;
-    er->line_chars  = malloc(length + 1);
-    memcpy(er->line_chars, line, length);
-    er->line_chars[length] = '\0';
+    row->line_length = length;
+
+    row->line_chars = malloc(length + 1);
+    if (row->line_chars == NULL)
+        die("er_store_line");
+
+    memcpy(row->line_chars, line, length);
+    row->line_chars[length] = '\0';
 }
 
 void er_update_render(struct EditorRow* row)
@@ -48,20 +52,20 @@ void er_update_render(struct EditorRow* row)
     row->render_chars[idx] = '\0';
 }
 
-void er_insert_character(struct EditorRow* er, size_t at, int c)
+void er_insert_character(struct EditorRow* row, size_t at, int c)
 {
-    at = MIN(at, er->line_length);
+    at = MIN(at, row->line_length);
 
-    char* new_line_chars = realloc(er->line_chars, er->line_length + 2);
+    char* new_line_chars = realloc(row->line_chars, row->line_length + 2);
     if (new_line_chars == NULL)
         die("er_insert_character");
 
-    er->line_chars = new_line_chars;
+    row->line_chars = new_line_chars;
 
-    memmove(&er->line_chars[at + 1], &er->line_chars[at], er->line_length - at + 1);
+    memmove(&row->line_chars[at + 1], &row->line_chars[at], row->line_length - at + 1);
 
-    er->line_length++;
-    er->line_chars[at] = c;
+    row->line_length++;
+    row->line_chars[at] = c;
 
-    er_update_render(er);
+    er_update_render(row);
 }
