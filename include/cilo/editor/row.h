@@ -18,4 +18,6 @@ void er_update_render(struct EditorRow* row);
 
 void er_insert_character(struct EditorRow* row, size_t at, int c);
 
+void er_delete_character(struct EditorRow* row, size_t at);
+
 #endif  // EDITOR_ROW_H

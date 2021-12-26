@@ -15,3 +15,17 @@ void editor_op_insert_char(int c)
 
     editor.cursor_x++;
 }
+
+void editor_op_delete_char()
+{
+    if (editor.cursor_y == editor.num_rows)
+        return;
+
+    if (editor.cursor_x > 0)
+    {
+        er_delete_character(&editor.rows[editor.cursor_y], editor.cursor_x - 1);
+        editor.is_dirty = true;
+
+        editor.cursor_x--;
+    }
+}

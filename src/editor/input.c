@@ -219,6 +219,9 @@ void editor_input_process()
         case Backspace:
         case CTRL_PLUS('h'):
         case Delete:
+            if (c == Delete)
+                move_cursor(ArrowRight);
+            editor_op_delete_char();
             break;
 
         case CTRL_PLUS('l'):

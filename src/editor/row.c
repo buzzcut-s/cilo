@@ -69,3 +69,15 @@ void er_insert_character(struct EditorRow* row, size_t at, int c)
 
     er_update_render(row);
 }
+
+void er_delete_character(struct EditorRow* row, size_t at)
+{
+    if (at >= row->line_length)
+        return;
+
+    memmove(&row->line_chars[at], &row->line_chars[at + 1], row->line_length - at);
+
+    row->line_length--;
+
+    er_update_render(row);
+}
