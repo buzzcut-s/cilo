@@ -44,11 +44,8 @@ static void clear_line(struct StringBuffer* sb)
 
 static void insert_padding(struct StringBuffer* sb, size_t padding)
 {
-    if (padding)
-    {
+    if (padding--)
         sbuffer_insert(sb, "~", 1);
-        padding--;
-    }
 
     while (padding--)
         sbuffer_insert(sb, " ", 1);
@@ -127,15 +124,15 @@ static void update_cursor(struct StringBuffer* sb)
 
 static size_t editor_cx_to_rx(struct EditorRow* row, size_t cursor_x)
 {
-    size_t render_x = 0;
+    size_t rx = 0;
     for (size_t i = 0; i < cursor_x; i++)
     {
         if (row->line_chars[i] == '\t')
-            render_x += (CILO_TAB_STOP - 1) - (render_x % CILO_TAB_STOP);
-        render_x++;
+            rx += (CILO_TAB_STOP - 1) - (rx % CILO_TAB_STOP);
+        rx++;
     }
 
-    return render_x;
+    return rx;
 }
 
 void update_scroll()
