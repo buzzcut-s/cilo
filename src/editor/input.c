@@ -189,7 +189,8 @@ void process_keypress()
             break;
 
         case End:
-            editor.cursor_x = editor.screen_cols - 1;
+            if (editor.cursor_y < editor.num_rows)
+                editor.cursor_x = editor.rows[editor.cursor_y].line_length;
             break;
     }
 }
