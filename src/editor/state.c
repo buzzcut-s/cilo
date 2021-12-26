@@ -243,7 +243,7 @@ void editor_state_insert_line(size_t at, const char* line, size_t length)
         struct EditorRow* new_rows = realloc(
           editor.rows, sizeof(struct EditorRow) * (editor.rows_capacity));
         if (new_rows == NULL)
-            die("store_line");
+            die("editor_state_insert_line");
 
         editor.rows = new_rows;
     }

@@ -31,7 +31,7 @@ void er_update_render(struct EditorRow* row)
 
     row->render_chars = malloc(row->line_length + n_tabs * (CILO_TAB_STOP - 1) + 1);
     if (row->render_chars == NULL)
-        die("update_render");
+        die("er_update_render");
 
     size_t idx = 0;
     for (size_t j = 0; j < row->line_length; j++)
@@ -86,7 +86,7 @@ void er_append_string(struct EditorRow* row, char* s, size_t length)
 {
     char* new_line_chars = realloc(row->line_chars, row->line_length + length + 1);
     if (new_line_chars == NULL)
-        die("er_insert_character");
+        die("er_append_string");
 
     row->line_chars = new_line_chars;
 
