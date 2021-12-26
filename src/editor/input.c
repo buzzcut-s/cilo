@@ -4,6 +4,7 @@
 
 #include <unistd.h>
 
+#include <cilo/common.h>
 #include <cilo/editor/operations.h>
 #include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
@@ -155,6 +156,8 @@ static void move_cursor(int key)
 
 void editor_input_process()
 {
+    static int quit_times = CILO_QUIT_TIMES;
+
     const int c = read_key();
 
     switch (c)
@@ -163,6 +166,14 @@ void editor_input_process()
             break;
 
         case CTRL_PLUS('q'):
+            if (editor.is_dirty && quit_times > 0)
+            {
+                editor_state_set_status_msg(
+                  "WARNING! File has unsaved changes."
+                  "Press Ctrl-Q %d more times to quit.",
+                  quit_times--);
+                return;
+            }
             terminal_clear_screen();
             exit(EXIT_SUCCESS);
 
@@ -217,4 +228,6 @@ void editor_input_process()
         default:
             editor_op_insert_char(c);
     }
+
+    quit_times = CILO_QUIT_TIMES;
 }
