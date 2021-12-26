@@ -13,6 +13,8 @@ struct EditorState
     size_t cursor_x;
     size_t cursor_y;
 
+    size_t render_x;
+
     size_t row_offset;
     size_t col_offset;
 

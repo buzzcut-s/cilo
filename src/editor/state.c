@@ -24,6 +24,8 @@ void init_editor()
     editor.cursor_x = 0;
     editor.cursor_y = 0;
 
+    editor.render_x = 0;
+
     editor.row_offset = 0;
     editor.col_offset = 0;
 
@@ -118,24 +120,41 @@ static void update_cursor(struct StringBuffer* sb)
 
     const int buf_len = snprintf(buf, sizeof(buf), CURSOR_POSITION_Y_X,
                                  (editor.cursor_y - editor.row_offset) + 1,
-                                 (editor.cursor_x - editor.col_offset) + 1);
+                                 (editor.render_x - editor.col_offset) + 1);
 
     sbuffer_insert(sb, buf, buf_len);
 }
 
+static size_t editor_cx_to_rx(struct EditorRow* row, size_t cursor_x)
+{
+    size_t render_x = 0;
+    for (size_t i = 0; i < cursor_x; i++)
+    {
+        if (row->line_chars[i] == '\t')
+            render_x += (CILO_TAB_STOP - 1) - (render_x % CILO_TAB_STOP);
+        render_x++;
+    }
+
+    return render_x;
+}
+
 void update_scroll()
 {
+    editor.render_x = 0;
+    if (editor.cursor_y < editor.num_rows)
+        editor.render_x = editor_cx_to_rx(&editor.rows[editor.cursor_y], editor.cursor_x);
+
     if (editor.cursor_y < editor.row_offset)
         editor.row_offset = editor.cursor_y;
 
     if (editor.cursor_y >= editor.row_offset + editor.screen_rows)
         editor.row_offset = editor.cursor_y - editor.screen_rows + 1;
 
-    if (editor.cursor_x < editor.col_offset)
-        editor.col_offset = editor.cursor_x;
+    if (editor.render_x < editor.col_offset)
+        editor.col_offset = editor.render_x;
 
-    if (editor.cursor_x >= editor.col_offset + editor.screen_cols)
-        editor.col_offset = editor.cursor_x - editor.screen_cols + 1;
+    if (editor.render_x >= editor.col_offset + editor.screen_cols)
+        editor.col_offset = editor.render_x - editor.screen_cols + 1;
 }
 
 void redraw_editor()
