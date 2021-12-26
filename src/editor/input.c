@@ -163,6 +163,7 @@ void editor_input_process()
     switch (c)
     {
         case '\r':
+            editor_op_insert_new_line();
             break;
 
         case CTRL_PLUS('q'):
