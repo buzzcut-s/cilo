@@ -35,12 +35,12 @@ struct EditorState
 
 extern struct EditorState editor;
 
-void init_editor();
+void editor_state_init();
 
-void redraw_editor();
+void editor_state_redraw();
 
-void store_line(const char* line, size_t length);
+void editor_state_store_line(const char* line, size_t length);
 
-void editor_set_help_message(const char* format, ...);
+void editor_state_set_help_message(const char* format, ...);
 
 #endif  // EDITOR_STATE_H

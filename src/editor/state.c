@@ -18,7 +18,7 @@
 
 struct EditorState editor;
 
-void init_editor()
+void editor_state_init()
 {
     static const int ROWS_INITIAL_CAPACITY = 16;
 
@@ -206,7 +206,7 @@ static void draw_message_bar(struct StringBuffer* sb)
         sbuffer_insert(sb, editor.help_msg, msg_len);
 }
 
-void redraw_editor()
+void editor_state_redraw()
 {
     update_scroll();
 
@@ -260,7 +260,7 @@ static void update_render(struct EditorRow* row)
     row->render_chars[idx] = '\0';
 }
 
-void store_line(const char* line, size_t length)
+void editor_state_store_line(const char* line, size_t length)
 {
     if (editor.num_rows + 1 > editor.rows_capacity)
     {
@@ -281,7 +281,7 @@ void store_line(const char* line, size_t length)
     editor.num_rows++;
 }
 
-void editor_set_help_message(const char* format, ...)
+void editor_state_set_help_message(const char* format, ...)
 {
     va_list ap;
     va_start(ap, format);

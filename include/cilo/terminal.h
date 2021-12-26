@@ -1,8 +1,8 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
-void enable_raw_mode();
+void terminal_enable_raw_mode();
 
-void clear_screen();
+void terminal_clear_screen();
 
 #endif

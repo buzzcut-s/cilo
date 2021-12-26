@@ -26,7 +26,7 @@ static void disable_raw_mode()
     restore_original_terminal_state();
 }
 
-void enable_raw_mode()
+void terminal_enable_raw_mode()
 {
     store_original_terminal_state();
 
@@ -59,7 +59,7 @@ void enable_raw_mode()
         die("tcsetattr");
 }
 
-void clear_screen()
+void terminal_clear_screen()
 {
     write(STDIN_FILENO, ERASE_IN_DISPLAY_ALL, 4);
     write(STDIN_FILENO, CURSOR_POSITION_1_1, 3);

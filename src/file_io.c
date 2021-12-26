@@ -17,7 +17,7 @@ static ssize_t trim_newline(const char* line, ssize_t length)
     return length;
 }
 
-void read_file(const char* path)
+void file_io_read(const char* path)
 {
     editor.filename = strdup(path);
 
@@ -32,7 +32,7 @@ void read_file(const char* path)
     while ((length = getline(&line, &line_capacity, file)) != -1)
     {
         length = trim_newline(line, length);
-        store_line(line, length);
+        editor_state_store_line(line, length);
     }
 
     free(line);

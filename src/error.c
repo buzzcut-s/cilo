@@ -8,7 +8,7 @@
 
 void die(const char* s)
 {
-    clear_screen();
+    terminal_clear_screen();
     perror(s);
     exit(EXIT_FAILURE);
 }

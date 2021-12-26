@@ -148,14 +148,14 @@ static void move_cursor(int key)
     snap_cursor_to_end();
 }
 
-void process_keypress()
+void editor_input_process()
 {
     const int c = read_key();
 
     switch (c)
     {
         case CTRL_PLUS('q'):
-            clear_screen();
+            terminal_clear_screen();
             exit(EXIT_SUCCESS);
 
         case ArrowUp:

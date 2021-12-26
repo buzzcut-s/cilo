@@ -5,18 +5,18 @@
 
 int main(int argc, const char* argv[])
 {
-    enable_raw_mode();
-    init_editor();
+    terminal_enable_raw_mode();
+    editor_state_init();
 
     if (argc >= 2)
-        read_file(argv[1]);
+        file_io_read(argv[1]);
 
-    editor_set_help_message("HELP: Ctrl-Q = quit");
+    editor_state_set_help_message("HELP: Ctrl-Q = quit");
 
     while (1)
     {
-        redraw_editor();
-        process_keypress();
+        editor_state_redraw();
+        editor_input_process();
     }
 
     return 0;
