@@ -14,7 +14,8 @@ target_sources(
          window_size.c
          editor/input.c
          editor/row.c
-         file_io.c)
+         file_io.c
+         editor/operations.c)
 
 add_executable(cilo)
 

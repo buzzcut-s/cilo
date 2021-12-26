@@ -4,6 +4,7 @@
 
 #include <unistd.h>
 
+#include <cilo/editor/operations.h>
 #include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
 #include <cilo/error.h>
@@ -192,5 +193,8 @@ void editor_input_process()
             if (editor.cursor_y < editor.num_rows)
                 editor.cursor_x = editor.rows[editor.cursor_y].line_length;
             break;
+
+        default:
+            editor_op_insert_char(c);
     }
 }
