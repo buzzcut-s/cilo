@@ -52,7 +52,7 @@ static char* er_to_string(size_t* out_buf_len)
     size_t total_len = 0;
 
     for (size_t i = 0; i < editor.num_rows; i++)
-        total_len += editor.rows[i].line_length + 1;
+        total_len += editor.rows[i].length + 1;
     *out_buf_len = total_len;
 
     char* buf = malloc(total_len);
@@ -62,8 +62,8 @@ static char* er_to_string(size_t* out_buf_len)
     char* p = buf;
     for (size_t i = 0; i < editor.num_rows; i++)
     {
-        memcpy(p, editor.rows[i].line_chars, editor.rows[i].line_length);
-        p += editor.rows[i].line_length;
+        memcpy(p, editor.rows[i].chars, editor.rows[i].length);
+        p += editor.rows[i].length;
         *p = '\n';
         p++;
     }

@@ -111,7 +111,7 @@ static void snap_cursor_to_end()
     const struct EditorRow* cr = get_current_row();
 
     editor.cursor_x = MIN(editor.cursor_x,
-                          cr ? cr->line_length : 0);
+                          cr ? cr->length : 0);
 }
 
 static void move_cursor(int key)
@@ -131,7 +131,7 @@ static void move_cursor(int key)
             else if (editor.cursor_y > 0)
             {
                 editor.cursor_y--;
-                editor.cursor_x = editor.rows[editor.cursor_y].line_length;
+                editor.cursor_x = editor.rows[editor.cursor_y].length;
             }
             break;
 
@@ -141,9 +141,9 @@ static void move_cursor(int key)
             break;
 
         case ArrowRight:
-            if (cr && editor.cursor_x < cr->line_length)
+            if (cr && editor.cursor_x < cr->length)
                 editor.cursor_x++;
-            else if (cr && editor.cursor_x == cr->line_length)
+            else if (cr && editor.cursor_x == cr->length)
             {
                 editor.cursor_y++;
                 editor.cursor_x = 0;
@@ -170,7 +170,7 @@ void editor_input_process()
             if (editor.is_dirty && quit_times > 0)
             {
                 editor_state_set_status_msg(
-                  "WARNING! File has unsaved changes."
+                  "WARNING! File has unsaved changes. "
                   "Press Ctrl-Q %d more times to quit.",
                   quit_times--);
                 return;
@@ -214,7 +214,7 @@ void editor_input_process()
 
         case End:
             if (editor.cursor_y < editor.num_rows)
-                editor.cursor_x = editor.rows[editor.cursor_y].line_length;
+                editor.cursor_x = editor.rows[editor.cursor_y].length;
             break;
 
         case Backspace:

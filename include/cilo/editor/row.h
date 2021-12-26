@@ -5,8 +5,8 @@
 
 struct EditorRow
 {
-    char*  line_chars;
-    size_t line_length;
+    char*  chars;
+    size_t length;
 
     char*  render_chars;
     size_t render_length;

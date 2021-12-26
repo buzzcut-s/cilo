@@ -31,8 +31,8 @@ void editor_op_delete_char()
     }
     else
     {
-        editor.cursor_x = editor.rows[editor.cursor_y - 1].line_length;
-        er_append_string(&editor.rows[editor.cursor_y - 1], row->line_chars, row->line_length);
+        editor.cursor_x = editor.rows[editor.cursor_y - 1].length;
+        er_append_string(&editor.rows[editor.cursor_y - 1], row->chars, row->length);
         editor_state_delete_line(editor.cursor_y);
         editor.cursor_y--;
     }
@@ -50,13 +50,13 @@ void editor_op_insert_new_line()
     {
         struct EditorRow* row = &editor.rows[editor.cursor_y];
 
-        editor_state_insert_line(editor.cursor_y + 1, &row->line_chars[editor.cursor_x],
-                                 row->line_length - editor.cursor_x);
+        editor_state_insert_line(editor.cursor_y + 1, &row->chars[editor.cursor_x],
+                                 row->length - editor.cursor_x);
 
         row = &editor.rows[editor.cursor_y];
 
-        row->line_length                  = editor.cursor_x;
-        row->line_chars[row->line_length] = '\0';
+        row->length             = editor.cursor_x;
+        row->chars[row->length] = '\0';
 
         er_update_render(row);
     }

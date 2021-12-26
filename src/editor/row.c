@@ -9,34 +9,34 @@
 
 void er_store_line(struct EditorRow* row, const char* line, size_t length)
 {
-    row->line_length = length;
+    row->length = length;
 
-    row->line_chars = malloc(length + 1);
-    if (row->line_chars == NULL)
+    row->chars = malloc(length + 1);
+    if (row->chars == NULL)
         die("er_store_line");
 
-    memcpy(row->line_chars, line, length);
-    row->line_chars[length] = '\0';
+    memcpy(row->chars, line, length);
+    row->chars[length] = '\0';
 }
 
 void er_update_render(struct EditorRow* row)
 {
     size_t n_tabs = 0;
 
-    for (size_t i = 0; i < row->line_length; i++)
+    for (size_t i = 0; i < row->length; i++)
     {
-        if (row->line_chars[i] == '\t')
+        if (row->chars[i] == '\t')
             n_tabs++;
     }
 
-    row->render_chars = malloc(row->line_length + n_tabs * (CILO_TAB_STOP - 1) + 1);
+    row->render_chars = malloc(row->length + n_tabs * (CILO_TAB_STOP - 1) + 1);
     if (row->render_chars == NULL)
         die("er_update_render");
 
     size_t idx = 0;
-    for (size_t j = 0; j < row->line_length; j++)
+    for (size_t j = 0; j < row->length; j++)
     {
-        if (row->line_chars[j] == '\t')
+        if (row->chars[j] == '\t')
         {
             row->render_chars[idx++] = ' ';
             while (idx % CILO_TAB_STOP != 0)
@@ -44,7 +44,7 @@ void er_update_render(struct EditorRow* row)
         }
         else
         {
-            row->render_chars[idx++] = row->line_chars[j];
+            row->render_chars[idx++] = row->chars[j];
         }
     }
 
@@ -54,44 +54,44 @@ void er_update_render(struct EditorRow* row)
 
 void er_insert_character(struct EditorRow* row, size_t at, int c)
 {
-    at = MIN(at, row->line_length);
+    at = MIN(at, row->length);
 
-    char* new_line_chars = realloc(row->line_chars, row->line_length + 2);
+    char* new_line_chars = realloc(row->chars, row->length + 2);
     if (new_line_chars == NULL)
         die("er_insert_character");
 
-    row->line_chars = new_line_chars;
+    row->chars = new_line_chars;
 
-    memmove(&row->line_chars[at + 1], &row->line_chars[at], row->line_length - at + 1);
+    memmove(&row->chars[at + 1], &row->chars[at], row->length - at + 1);
 
-    row->line_length++;
-    row->line_chars[at] = c;
+    row->length++;
+    row->chars[at] = c;
 
     er_update_render(row);
 }
 
 void er_delete_character(struct EditorRow* row, size_t at)
 {
-    if (at >= row->line_length)
+    if (at >= row->length)
         return;
 
-    memmove(&row->line_chars[at], &row->line_chars[at + 1], row->line_length - at);
+    memmove(&row->chars[at], &row->chars[at + 1], row->length - at);
 
-    row->line_length--;
+    row->length--;
 
     er_update_render(row);
 }
 
 void er_append_string(struct EditorRow* row, char* s, size_t length)
 {
-    char* new_line_chars = realloc(row->line_chars, row->line_length + length + 1);
+    char* new_line_chars = realloc(row->chars, row->length + length + 1);
     if (new_line_chars == NULL)
         die("er_append_string");
 
-    row->line_chars = new_line_chars;
+    row->chars = new_line_chars;
 
-    memcpy(&row->line_chars[row->line_length], s, length);
-    row->line_length += length;
+    memcpy(&row->chars[row->length], s, length);
+    row->length += length;
 
     er_update_render(row);
 }

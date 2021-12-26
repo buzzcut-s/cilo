@@ -137,7 +137,7 @@ static size_t editor_cx_to_rx(struct EditorRow* row, size_t cursor_x)
     size_t rx = 0;
     for (size_t i = 0; i < cursor_x; i++)
     {
-        if (row->line_chars[i] == '\t')
+        if (row->chars[i] == '\t')
             rx += (CILO_TAB_STOP - 1) - (rx % CILO_TAB_STOP);
         rx++;
     }
@@ -260,7 +260,7 @@ void editor_state_insert_line(size_t at, const char* line, size_t length)
 
 static void free_row(struct EditorRow* row)
 {
-    free(row->line_chars);
+    free(row->chars);
     free(row->render_chars);
 }
 
