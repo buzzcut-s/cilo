@@ -15,7 +15,8 @@
 
 enum EditorKey
 {
-    ArrowUp = 2103,
+    Backspace = 127,
+    ArrowUp   = 2103,
     ArrowLeft,
     ArrowDown,
     ArrowRight,
@@ -23,6 +24,7 @@ enum EditorKey
     PageDown,
     Home,
     End,
+    Delete,
 };
 
 static int handle_escape_sequence()
@@ -45,6 +47,7 @@ static int handle_escape_sequence()
             {
                 switch (seq[1])  // clang-format off
                 {
+                    case '3': return Delete;
                     case '5': return PageUp;
                     case '6': return PageDown;
                     case '1': case '7': return Home;
@@ -155,6 +158,9 @@ void editor_input_process()
 
     switch (c)
     {
+        case '\r':
+            break;
+
         case CTRL_PLUS('q'):
             terminal_clear_screen();
             exit(EXIT_SUCCESS);
@@ -192,6 +198,15 @@ void editor_input_process()
         case End:
             if (editor.cursor_y < editor.num_rows)
                 editor.cursor_x = editor.rows[editor.cursor_y].line_length;
+            break;
+
+        case Backspace:
+        case CTRL_PLUS('h'):
+        case Delete:
+            break;
+
+        case CTRL_PLUS('l'):
+        case '\x1b':
             break;
 
         default:
