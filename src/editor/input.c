@@ -168,6 +168,16 @@ void process_keypress()
         case PageUp:
         case PageDown:
         {
+            if (c == PageUp)
+            {
+                editor.cursor_y = editor.row_offset;
+            }
+            else if (c == PageDown)
+            {
+                editor.cursor_y = MIN(editor.row_offset + editor.screen_rows - 2,
+                                      editor.num_rows);
+            }
+
             int times = editor.screen_rows;
             while (times--)
                 move_cursor(c == PageUp ? ArrowUp : ArrowDown);
