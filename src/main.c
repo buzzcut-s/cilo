@@ -11,7 +11,7 @@ int main(int argc, const char* argv[])
     if (argc >= 2)
         file_io_read(argv[1]);
 
-    editor_state_set_status_msg("HELP: Ctrl-Q = quit");
+    editor_state_set_status_msg("HELP: Ctrl-S = save | Ctrl-Q = quit");
 
     while (1)
     {

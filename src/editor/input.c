@@ -8,6 +8,7 @@
 #include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
 #include <cilo/error.h>
+#include <cilo/file_io.h>
 #include <cilo/terminal.h>
 #include <cilo/utils.h>
 
@@ -164,6 +165,10 @@ void editor_input_process()
         case CTRL_PLUS('q'):
             terminal_clear_screen();
             exit(EXIT_SUCCESS);
+
+        case CTRL_PLUS('s'):
+            file_io_save();
+            break;
 
         case ArrowUp:
         case ArrowLeft:
