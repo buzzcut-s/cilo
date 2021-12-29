@@ -22,7 +22,6 @@ void er_store_line(struct EditorRow* row, const char* line, size_t length)
 void er_update_render(struct EditorRow* row)
 {
     size_t n_tabs = 0;
-
     for (size_t i = 0; i < row->length; i++)
     {
         if (row->chars[i] == '\t')
@@ -34,9 +33,9 @@ void er_update_render(struct EditorRow* row)
         die("er_update_render");
 
     size_t idx = 0;
-    for (size_t j = 0; j < row->length; j++)
+    for (size_t i = 0; i < row->length; i++)
     {
-        if (row->chars[j] == '\t')
+        if (row->chars[i] == '\t')
         {
             row->render_chars[idx++] = ' ';
             while (idx % CILO_TAB_STOP != 0)
@@ -44,7 +43,7 @@ void er_update_render(struct EditorRow* row)
         }
         else
         {
-            row->render_chars[idx++] = row->chars[j];
+            row->render_chars[idx++] = row->chars[i];
         }
     }
 

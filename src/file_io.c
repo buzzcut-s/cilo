@@ -50,7 +50,6 @@ void file_io_read(const char* path)
 static char* er_to_string(size_t* out_buf_len)
 {
     size_t total_len = 0;
-
     for (size_t i = 0; i < editor.num_rows; i++)
         total_len += editor.rows[i].length + 1;
     *out_buf_len = total_len;

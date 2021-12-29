@@ -135,10 +135,10 @@ static void update_cursor(struct StringBuffer* sb)
     sbuffer_insert(sb, buf, buf_len);
 }
 
-static size_t editor_cx_to_rx(struct EditorRow* row, size_t cursor_x)
+static size_t editor_cx_to_rx(struct EditorRow* row, size_t cx)
 {
     size_t rx = 0;
-    for (size_t i = 0; i < cursor_x; i++)
+    for (size_t i = 0; i < cx; i++)
     {
         if (row->chars[i] == '\t')
             rx += (CILO_TAB_STOP - 1) - (rx % CILO_TAB_STOP);
