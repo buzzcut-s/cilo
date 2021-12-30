@@ -108,9 +108,23 @@ static void op_search_callback(const char* query, int key)
 
 void editor_op_search()
 {
+    const size_t saved_cx         = editor.cursor_x;
+    const size_t saved_cy         = editor.cursor_y;
+    const size_t saved_col_offset = editor.col_offset;
+    const size_t saved_row_offset = editor.row_offset;
+
     char* query = editor_input_from_prompt("Search: %s (ESC to cancel)",
                                            op_search_callback);
 
     if (query)
+    {
         free(query);
+    }
+    else
+    {
+        editor.cursor_x   = saved_cx;
+        editor.cursor_y   = saved_cy;
+        editor.col_offset = saved_col_offset;
+        editor.row_offset = saved_row_offset;
+    }
 }
