@@ -86,19 +86,53 @@ static size_t editor_rx_to_cx(const struct EditorRow* row, size_t rx)
     return cx;
 }
 
+enum SearchDirection
+{
+    DirectionForward,
+    DirectionBackward,
+};
+
 static void op_search_callback(const char* query, int key)
 {
-    if (key == '\r' || key == '\x1b')
-        return;
+    static int     direction        = DirectionForward;
+    static int64_t last_matched_idx = -1;
 
+    if (key == '\r' || key == '\x1b')
+    {
+        direction        = DirectionForward;
+        last_matched_idx = -1;
+        return;
+    }
+    if (key == KeyArrowRight || key == KeyArrowDown)
+        direction = DirectionForward;
+    else if (key == KeyArrowLeft || key == KeyArrowUp)
+        direction = DirectionBackward;
+    else
+    {
+        direction        = DirectionForward;
+        last_matched_idx = -1;
+    }
+
+    if (last_matched_idx == -1)
+        direction = DirectionForward;
+
+    int64_t current_idx = last_matched_idx;
     for (size_t i = 0; i < editor.num_rows; i++)
     {
-        const struct EditorRow* row = &editor.rows[i];
+        direction == DirectionForward ? current_idx++ : current_idx--;
+
+        if (current_idx == -1)
+            current_idx = editor.num_rows - 1;
+        else if (current_idx == editor.num_rows)
+            current_idx = 0;
+
+        const struct EditorRow* row = &editor.rows[current_idx];
 
         const char* matched = strstr(row->render_chars, query);
         if (matched)
         {
-            editor.cursor_y   = i;
+            last_matched_idx  = current_idx;
+            editor.cursor_y   = current_idx;
             editor.cursor_x   = editor_rx_to_cx(row, matched - row->render_chars);
             editor.row_offset = editor.num_rows;
             break;
@@ -113,7 +147,7 @@ void editor_op_search()
     const size_t saved_col_offset = editor.col_offset;
     const size_t saved_row_offset = editor.row_offset;
 
-    char* query = editor_input_from_prompt("Search: %s (ESC to cancel)",
+    char* query = editor_input_from_prompt("Search: %s (Use ESC/Arrows/Enter)",
                                            op_search_callback);
 
     if (query)
