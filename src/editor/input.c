@@ -183,6 +183,10 @@ void editor_input_process()
             file_io_save();
             break;
 
+        case CTRL_PLUS('f'):
+            editor_op_search();
+            break;
+
         case ArrowUp:
         case ArrowLeft:
         case ArrowDown:
