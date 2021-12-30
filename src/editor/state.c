@@ -135,7 +135,7 @@ static void update_cursor(struct StringBuffer* sb)
     sbuffer_insert(sb, buf, buf_len);
 }
 
-static size_t editor_cx_to_rx(struct EditorRow* row, size_t cx)
+static size_t editor_cx_to_rx(const struct EditorRow* row, size_t cx)
 {
     size_t rx = 0;
     for (size_t i = 0; i < cx; i++)
