@@ -1,5 +1,6 @@
 #include "cilo/editor/input.h"
 
+#include <ctype.h>
 #include <stdlib.h>
 
 #include <unistd.h>
@@ -234,4 +235,58 @@ void editor_input_process()
     }
 
     quit_times = CILO_QUIT_TIMES;
+}
+
+char* editor_input_from_prompt(const char* prompt)
+{
+    static const size_t BUF_INITIAL_CAPACITY = 128;
+
+    size_t buf_capacity = BUF_INITIAL_CAPACITY;
+    size_t buf_length   = 0;
+    char*  buf          = malloc(buf_capacity);
+    buf[0]              = '\0';
+
+    while (true)
+    {
+        editor_state_set_status_msg(prompt, buf);
+        editor_state_redraw();
+
+        const int c = read_key();
+
+        if (c == Delete || c == CTRL_PLUS('h') || c == Backspace)
+        {
+            if (buf_length != 0)
+                buf[--buf_length] = '\0';
+        }
+        else if (c == '\x1b')
+        {
+            editor_state_set_status_msg("");
+            free(buf);
+            return NULL;
+        }
+        else if (c == '\r')
+        {
+            if (buf_length != 0)
+            {
+                editor_state_set_status_msg("");
+                return buf;
+            }
+        }
+        else if (!iscntrl(c) && c < 128)
+        {
+            if (buf_length + 1 > buf_capacity)
+            {
+                buf_capacity *= 2;
+
+                char* new_buf = realloc(buf, buf_capacity);
+                if (new_buf == NULL)
+                    die("editor_input_from_prompt");
+
+                buf = new_buf;
+            }
+
+            buf[buf_length++] = c;
+            buf[buf_length]   = '\0';
+        }
+    }
 }
