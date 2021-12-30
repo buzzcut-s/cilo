@@ -242,7 +242,7 @@ void editor_input_process()
 }
 
 char* editor_input_from_prompt(const char* prompt,
-                               void (*search_callback)(const char*, int))
+                               void (*callback)(const char*, int))
 {
     static const size_t BUF_INITIAL_CAPACITY = 64;
 
@@ -267,8 +267,8 @@ char* editor_input_from_prompt(const char* prompt,
         {
             editor_state_set_status_msg("");
 
-            if (search_callback)
-                search_callback(buf, c);
+            if (callback)
+                callback(buf, c);
 
             free(buf);
             return NULL;
@@ -279,8 +279,8 @@ char* editor_input_from_prompt(const char* prompt,
             {
                 editor_state_set_status_msg("");
 
-                if (search_callback)
-                    search_callback(buf, c);
+                if (callback)
+                    callback(buf, c);
 
                 return buf;
             }
@@ -302,7 +302,7 @@ char* editor_input_from_prompt(const char* prompt,
             buf[buf_length]   = '\0';
         }
 
-        if (search_callback)
-            search_callback(buf, c);
+        if (callback)
+            callback(buf, c);
     }
 }
