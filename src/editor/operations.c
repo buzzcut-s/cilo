@@ -86,10 +86,9 @@ static size_t editor_rx_to_cx(const struct EditorRow* row, size_t rx)
     return cx;
 }
 
-void editor_op_search()
+static void op_search_callback(const char* query, int key)
 {
-    char* query = editor_input_from_prompt("Search: %s (ESC to cancel)", NULL);
-    if (query == NULL)
+    if (key == '\r' || key == '\x1b')
         return;
 
     for (size_t i = 0; i < editor.num_rows; i++)
@@ -105,6 +104,13 @@ void editor_op_search()
             break;
         }
     }
+}
 
-    free(query);
+void editor_op_search()
+{
+    char* query = editor_input_from_prompt("Search: %s (ESC to cancel)",
+                                           op_search_callback);
+
+    if (query)
+        free(query);
 }
