@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <cilo/editor/input.h>
 #include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
 #include <cilo/error.h>
@@ -73,7 +74,14 @@ static char* er_to_string(size_t* out_buf_len)
 void file_io_save()
 {
     if (editor.filename == NULL)
-        return;
+    {
+        editor.filename = editor_input_from_prompt("Save as: %s");
+        if (editor.filename == NULL)
+        {
+            editor_state_set_status_msg("Save aborted.");
+            return;
+        }
+    }
 
     size_t buf_len = 0;
     char*  buf     = er_to_string(&buf_len);
