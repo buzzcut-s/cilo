@@ -239,7 +239,7 @@ void editor_input_process()
 
 char* editor_input_from_prompt(const char* prompt)
 {
-    static const size_t BUF_INITIAL_CAPACITY = 128;
+    static const size_t BUF_INITIAL_CAPACITY = 64;
 
     size_t buf_capacity = BUF_INITIAL_CAPACITY;
     size_t buf_length   = 0;
