@@ -88,7 +88,7 @@ static size_t editor_rx_to_cx(const struct EditorRow* row, size_t rx)
 
 void editor_op_search()
 {
-    char* query = editor_input_from_prompt("Search: %s (ESC to cancel)");
+    char* query = editor_input_from_prompt("Search: %s (ESC to cancel)", NULL);
     if (query == NULL)
         return;
 

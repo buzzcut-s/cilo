@@ -75,7 +75,7 @@ void file_io_save()
 {
     if (editor.filename == NULL)
     {
-        editor.filename = editor_input_from_prompt("Save as: %s");
+        editor.filename = editor_input_from_prompt("Save as: %s", NULL);
         if (editor.filename == NULL)
         {
             editor_state_set_status_msg("Save aborted.");

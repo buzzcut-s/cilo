@@ -241,7 +241,8 @@ void editor_input_process()
     quit_times = CILO_QUIT_TIMES;
 }
 
-char* editor_input_from_prompt(const char* prompt)
+char* editor_input_from_prompt(const char* prompt,
+                               void (*search_callback)(const char*, int))
 {
     static const size_t BUF_INITIAL_CAPACITY = 64;
 
@@ -265,6 +266,10 @@ char* editor_input_from_prompt(const char* prompt)
         else if (c == '\x1b')
         {
             editor_state_set_status_msg("");
+
+            if (search_callback)
+                search_callback(buf, c);
+
             free(buf);
             return NULL;
         }
@@ -273,6 +278,10 @@ char* editor_input_from_prompt(const char* prompt)
             if (buf_length != 0)
             {
                 editor_state_set_status_msg("");
+
+                if (search_callback)
+                    search_callback(buf, c);
+
                 return buf;
             }
         }
@@ -292,5 +301,8 @@ char* editor_input_from_prompt(const char* prompt)
             buf[buf_length++] = c;
             buf[buf_length]   = '\0';
         }
+
+        if (search_callback)
+            search_callback(buf, c);
     }
 }
