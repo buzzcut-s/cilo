@@ -7,4 +7,6 @@ void editor_op_delete_char();
 
 void editor_op_insert_new_line();
 
+void editor_op_search();
+
 #endif  // EDITOR_OPERATIONS_H

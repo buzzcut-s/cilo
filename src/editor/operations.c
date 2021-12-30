@@ -1,7 +1,11 @@
 #include "cilo/editor/operations.h"
 
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
+#include <cilo/common.h>
+#include <cilo/editor/input.h>
 #include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
 
@@ -63,4 +67,44 @@ void editor_op_insert_new_line()
 
     editor.cursor_y++;
     editor.cursor_x = 0;
+}
+
+static size_t editor_rx_to_cx(const struct EditorRow* row, size_t rx)
+{
+    size_t curr_rx = 0;
+
+    size_t cx = 0;
+    for (cx = 0; cx < row->length; cx++)
+    {
+        if (row->chars[cx] == '\t')
+            curr_rx += (CILO_TAB_STOP - 1) - (curr_rx % CILO_TAB_STOP);
+        curr_rx++;
+
+        if (curr_rx > rx)
+            return cx;
+    }
+    return cx;
+}
+
+void editor_op_search()
+{
+    char* query = editor_input_from_prompt("Search: %s (ESC to cancel)");
+    if (query == NULL)
+        return;
+
+    for (size_t i = 0; i < editor.num_rows; i++)
+    {
+        const struct EditorRow* row = &editor.rows[i];
+
+        const char* matched = strstr(row->render_chars, query);
+        if (matched)
+        {
+            editor.cursor_y   = i;
+            editor.cursor_x   = editor_rx_to_cx(row, matched - row->render_chars);
+            editor.row_offset = editor.num_rows;
+            break;
+        }
+    }
+
+    free(query);
 }
