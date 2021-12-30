@@ -168,12 +168,12 @@ void editor_input_process()
             break;
 
         case CTRL_PLUS('q'):
-            if (editor.is_dirty && quit_times > 0)
+            if (editor.is_dirty && quit_times - 1 > 0)
             {
                 editor_state_set_status_msg(
                   "WARNING! File has unsaved changes. "
                   "Press Ctrl-Q %d more times to quit.",
-                  quit_times--);
+                  --quit_times);
                 return;
             }
             terminal_clear_screen();
