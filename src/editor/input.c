@@ -16,20 +16,6 @@
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
 
-enum EditorKey
-{
-    Backspace = 127,
-    ArrowUp   = 2103,
-    ArrowLeft,
-    ArrowDown,
-    ArrowRight,
-    PageUp,
-    PageDown,
-    Home,
-    End,
-    Delete,
-};
-
 static int handle_escape_sequence()
 {
     char seq[3];
@@ -50,11 +36,11 @@ static int handle_escape_sequence()
             {
                 switch (seq[1])  // clang-format off
                 {
-                    case '3': return Delete;
-                    case '5': return PageUp;
-                    case '6': return PageDown;
-                    case '1': case '7': return Home;
-                    case '4': case '8': return End;
+                    case '3': return KeyDelete;
+                    case '5': return KeyPageUp;
+                    case '6': return KeyPageDown;
+                    case '1': case '7': return KeyHome;
+                    case '4': case '8': return KeyEnd;
                 }  // clang-format on
             }
         }
@@ -62,12 +48,12 @@ static int handle_escape_sequence()
         {
             switch (seq[1])  // clang-format off
             {
-                case 'A': return ArrowUp;
-                case 'B': return ArrowDown;
-                case 'C': return ArrowRight;
-                case 'D': return ArrowLeft;
-                case 'H': return Home;
-                case 'F': return End;
+                case 'A': return KeyArrowUp;
+                case 'B': return KeyArrowDown;
+                case 'C': return KeyArrowRight;
+                case 'D': return KeyArrowLeft;
+                case 'H': return KeyHome;
+                case 'F': return KeyEnd;
             }  // clang-format on
         }
     }
@@ -75,8 +61,8 @@ static int handle_escape_sequence()
     {
         switch (seq[1])  // clang-format off
         {
-            case 'H': return Home;
-            case 'F': return End;
+            case 'H': return KeyHome;
+            case 'F': return KeyEnd;
         }  // clang-format on
     }
 
@@ -121,12 +107,12 @@ static void move_cursor(int key)
 
     switch (key)
     {
-        case ArrowUp:
+        case KeyArrowUp:
             if (editor.cursor_y != 0)
                 editor.cursor_y--;
             break;
 
-        case ArrowLeft:
+        case KeyArrowLeft:
             if (editor.cursor_x != 0)
                 editor.cursor_x--;
             else if (editor.cursor_y > 0)
@@ -136,12 +122,12 @@ static void move_cursor(int key)
             }
             break;
 
-        case ArrowDown:
+        case KeyArrowDown:
             if (editor.cursor_y < editor.num_rows)
                 editor.cursor_y++;
             break;
 
-        case ArrowRight:
+        case KeyArrowRight:
             if (cr && editor.cursor_x < cr->length)
                 editor.cursor_x++;
             else if (cr && editor.cursor_x == cr->length)
@@ -187,21 +173,21 @@ void editor_input_process()
             editor_op_search();
             break;
 
-        case ArrowUp:
-        case ArrowLeft:
-        case ArrowDown:
-        case ArrowRight:
+        case KeyArrowUp:
+        case KeyArrowLeft:
+        case KeyArrowDown:
+        case KeyArrowRight:
             move_cursor(c);
             break;
 
-        case PageUp:
-        case PageDown:
+        case KeyPageUp:
+        case KeyPageDown:
         {
-            if (c == PageUp)
+            if (c == KeyPageUp)
             {
                 editor.cursor_y = editor.row_offset;
             }
-            else if (c == PageDown)
+            else if (c == KeyPageDown)
             {
                 editor.cursor_y = MIN(editor.row_offset + editor.screen_rows - 2,
                                       editor.num_rows);
@@ -209,24 +195,24 @@ void editor_input_process()
 
             int times = editor.screen_rows;
             while (times--)
-                move_cursor(c == PageUp ? ArrowUp : ArrowDown);
+                move_cursor(c == KeyPageUp ? KeyArrowUp : KeyArrowDown);
         }
         break;
 
-        case Home:
+        case KeyHome:
             editor.cursor_x = 0;
             break;
 
-        case End:
+        case KeyEnd:
             if (editor.cursor_y < editor.num_rows)
                 editor.cursor_x = editor.rows[editor.cursor_y].length;
             break;
 
-        case Backspace:
+        case KeyBackspace:
         case CTRL_PLUS('h'):
-        case Delete:
-            if (c == Delete)
-                move_cursor(ArrowRight);
+        case KeyDelete:
+            if (c == KeyDelete)
+                move_cursor(KeyArrowRight);
             editor_op_delete_char();
             break;
 
@@ -258,7 +244,7 @@ char* editor_input_from_prompt(const char* prompt,
 
         const int c = read_key();
 
-        if (c == Delete || c == CTRL_PLUS('h') || c == Backspace)
+        if (c == KeyDelete || c == CTRL_PLUS('h') || c == KeyBackspace)
         {
             if (buf_length != 0)
                 buf[--buf_length] = '\0';
