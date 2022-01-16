@@ -39,7 +39,9 @@ void er_update_render(struct EditorRow* row)
         {
             row->render_chars[idx++] = ' ';
             while (idx % CILO_TAB_STOP != 0)
+            {
                 row->render_chars[idx++] = ' ';
+            }
         }
         else
         {
@@ -55,11 +57,11 @@ void er_insert_character(struct EditorRow* row, size_t at, int c)
 {
     at = MIN(at, row->length);
 
-    char* new_line_chars = realloc(row->chars, row->length + 2);
-    if (new_line_chars == NULL)
+    char* new_chars = realloc(row->chars, row->length + 2);
+    if (new_chars == NULL)
         die("er_insert_character");
 
-    row->chars = new_line_chars;
+    row->chars = new_chars;
 
     memmove(&row->chars[at + 1], &row->chars[at], row->length - at + 1);
 
@@ -81,13 +83,13 @@ void er_delete_character(struct EditorRow* row, size_t at)
     er_update_render(row);
 }
 
-void er_append_string(struct EditorRow* row, char* s, size_t length)
+void er_append_string(struct EditorRow* row, const char* s, size_t length)
 {
-    char* new_line_chars = realloc(row->chars, row->length + length + 1);
-    if (new_line_chars == NULL)
+    char* new_chars = realloc(row->chars, row->length + length + 1);
+    if (new_chars == NULL)
         die("er_append_string");
 
-    row->chars = new_line_chars;
+    row->chars = new_chars;
 
     memcpy(&row->chars[row->length], s, length);
     row->length += length;

@@ -195,7 +195,9 @@ void editor_input_process()
 
             int times = editor.screen_rows;
             while (times--)
+            {
                 move_cursor(c == KeyPageUp ? KeyArrowUp : KeyArrowDown);
+            }
         }
         break;
 

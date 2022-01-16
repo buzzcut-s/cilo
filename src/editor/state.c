@@ -62,7 +62,9 @@ static void insert_padding(struct StringBuffer* sb, size_t padding)
         sbuffer_insert(sb, "~", 1);
 
     while (padding--)
+    {
         sbuffer_insert(sb, " ", 1);
+    }
 }
 
 static void display_welcome(struct StringBuffer* sb)
@@ -243,8 +245,8 @@ void editor_state_insert_line(size_t at, const char* line, size_t length)
     {
         editor.rows_capacity *= 2;
 
-        struct EditorRow* new_rows = realloc(
-          editor.rows, sizeof(struct EditorRow) * (editor.rows_capacity));
+        struct EditorRow* new_rows = realloc(editor.rows, sizeof(struct EditorRow)
+                                                            * (editor.rows_capacity));
         if (new_rows == NULL)
             die("editor_state_insert_line");
 

@@ -20,6 +20,6 @@ void er_insert_character(struct EditorRow* row, size_t at, int c);
 
 void er_delete_character(struct EditorRow* row, size_t at);
 
-void er_append_string(struct EditorRow* row, char* s, size_t length);
+void er_append_string(struct EditorRow* row, const char* s, size_t length);
 
 #endif  // EDITOR_ROW_H
