@@ -123,14 +123,15 @@ static void move_cursor(int key)
             break;
 
         case KeyArrowDown:
-            if (editor.cursor_y < editor.num_rows)
+            if (editor.cursor_y + 1 < editor.num_rows)
                 editor.cursor_y++;
             break;
 
         case KeyArrowRight:
             if (cr && editor.cursor_x < cr->length)
                 editor.cursor_x++;
-            else if (cr && editor.cursor_x == cr->length)
+            else if (cr && editor.cursor_x == cr->length
+                     && editor.cursor_y + 1 < editor.num_rows)
             {
                 editor.cursor_y++;
                 editor.cursor_x = 0;
@@ -190,7 +191,7 @@ void editor_input_process()
             else if (c == KeyPageDown)
             {
                 editor.cursor_y = MIN(editor.row_offset + editor.screen_rows - 2,
-                                      editor.num_rows);
+                                      editor.num_rows - 1);
             }
 
             int times = editor.screen_rows;
@@ -212,11 +213,19 @@ void editor_input_process()
 
         case KeyBackspace:
         case CTRL_PLUS('h'):
-        case KeyDelete:
-            if (c == KeyDelete)
-                move_cursor(KeyArrowRight);
             editor_op_delete_char();
             break;
+
+        case KeyDelete:
+        {
+            if (editor.cursor_y + 1 == editor.num_rows
+                && editor.cursor_x == editor.rows[editor.cursor_y].length)
+                break;
+
+            move_cursor(KeyArrowRight);
+            editor_op_delete_char();
+        }
+        break;
 
         case CTRL_PLUS('l'):
         case '\x1b':
