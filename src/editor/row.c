@@ -55,8 +55,6 @@ void er_update_render(struct EditorRow* row)
 
 void er_insert_character(struct EditorRow* row, size_t at, int c)
 {
-    at = MIN(at, row->length);
-
     char* new_chars = realloc(row->chars, row->length + 2);
     if (new_chars == NULL)
         die("er_insert_character");
@@ -73,9 +71,6 @@ void er_insert_character(struct EditorRow* row, size_t at, int c)
 
 void er_delete_character(struct EditorRow* row, size_t at)
 {
-    if (at >= row->length)
-        return;
-
     memmove(&row->chars[at], &row->chars[at + 1], row->length - at);
 
     row->length--;
