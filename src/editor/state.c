@@ -238,9 +238,6 @@ void editor_state_redraw()
 
 void editor_state_insert_line(size_t at, const char* line, size_t length)
 {
-    if (at > editor.num_rows)
-        return;
-
     if (editor.num_rows + 1 > editor.rows_capacity)
     {
         editor.rows_capacity *= 2;
@@ -271,9 +268,6 @@ static void free_row(struct EditorRow* row)
 
 void editor_state_delete_line(size_t at)
 {
-    if (at >= editor.num_rows)
-        return;
-
     free_row(&editor.rows[at]);
     memmove(&editor.rows[at], &editor.rows[at + 1],
             sizeof(struct EditorRow) * (editor.num_rows - at - 1));
