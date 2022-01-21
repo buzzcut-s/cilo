@@ -1,5 +1,6 @@
 #include "cilo/editor/state.h"
 
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -11,6 +12,7 @@
 
 #include <cilo/ansi_escape.h>
 #include <cilo/common.h>
+#include <cilo/editor/highlight.h>
 #include <cilo/editor/row.h>
 #include <cilo/error.h>
 #include <cilo/string_buffer.h>
@@ -85,7 +87,39 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
 
     const size_t length = MIN(MAX(chars_to_right, 0), editor.screen_cols);
 
-    sbuffer_insert(sb, &editor.rows[row_idx].render_chars[editor.col_offset], length);
+    const char*    c  = &editor.rows[row_idx].render_chars[editor.col_offset];
+    const uint8_t* hl = &editor.rows[row_idx].highlight[editor.col_offset];
+
+    int prev_color = HL_Default;
+    for (size_t i = 0; i < length; i++)
+    {
+        if (hl[i] == HL_Normal)
+        {
+            if (prev_color != HL_Default)
+            {
+                prev_color = HL_Default;
+                sbuffer_insert(sb, "\x1b[39m", 5);
+            }
+            sbuffer_insert(sb, &c[i], 1);
+        }
+        else
+        {
+            const int color = eh_highlight_to_color(hl[i]);
+            if (color != prev_color)
+            {
+                prev_color = color;
+
+                char      color_buf[16];
+                const int color_len = snprintf(color_buf, sizeof(color_buf),
+                                               "\x1b[%dm", color);
+
+                sbuffer_insert(sb, color_buf, color_len);
+            }
+            sbuffer_insert(sb, &c[i], 1);
+        }
+    }
+
+    sbuffer_insert(sb, "\x1b[39m", 5);
 }
 
 static void draw_rows(struct StringBuffer* sb)
