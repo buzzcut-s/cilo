@@ -260,15 +260,9 @@ void editor_state_insert_line(size_t at, const char* line, size_t length)
     editor.is_dirty = true;
 }
 
-static void free_row(struct EditorRow* row)
-{
-    free(row->chars);
-    free(row->render_chars);
-}
-
 void editor_state_delete_line(size_t at)
 {
-    free_row(&editor.rows[at]);
+    er_free(&editor.rows[at]);
     memmove(&editor.rows[at], &editor.rows[at + 1],
             sizeof(struct EditorRow) * (editor.num_rows - at - 1));
 

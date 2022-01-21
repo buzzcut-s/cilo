@@ -91,3 +91,9 @@ void er_append_string(struct EditorRow* row, const char* s, size_t length)
 
     er_update_render(row);
 }
+
+void er_free(struct EditorRow* row)
+{
+    free(row->chars);
+    free(row->render_chars);
+}

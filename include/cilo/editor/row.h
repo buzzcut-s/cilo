@@ -22,4 +22,6 @@ void er_delete_character(struct EditorRow* row, size_t at);
 
 void er_append_string(struct EditorRow* row, const char* s, size_t length);
 
+void er_free(struct EditorRow* row);
+
 #endif  // EDITOR_ROW_H
