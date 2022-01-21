@@ -1,11 +1,15 @@
 #include "cilo/editor/row.h"
 
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <cilo/common.h>
+#include <cilo/editor/highlight.h>
 #include <cilo/error.h>
 #include <cilo/utils.h>
+
+static void update_highlight(struct EditorRow* row);
 
 void er_store_line(struct EditorRow* row, const char* line, size_t length)
 {
@@ -51,6 +55,8 @@ void er_update_render(struct EditorRow* row)
 
     row->render_length     = idx;
     row->render_chars[idx] = '\0';
+
+    update_highlight(row);
 }
 
 void er_insert_character(struct EditorRow* row, size_t at, int c)
@@ -99,4 +105,20 @@ void er_free(struct EditorRow* row)
     free(row->chars);
     free(row->render_chars);
     free(row->highlight);
+}
+
+static void update_highlight(struct EditorRow* row)
+{
+    uint8_t* new_highlight = realloc(row->highlight, row->render_length);
+    if (new_highlight == NULL)
+        die("update_highlight");
+
+    row->highlight = new_highlight;
+    memset(row->highlight, HL_Normal, row->render_length);
+
+    for (size_t i = 0; i < row->render_length; i++)
+    {
+        if (isdigit(row->render_chars[i]))
+            row->highlight[i] = HL_Number;
+    }
 }
