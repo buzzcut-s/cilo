@@ -66,6 +66,8 @@ void er_insert_character(struct EditorRow* row, size_t at, int c)
     row->length++;
     row->chars[at] = c;
 
+    row->highlight = NULL;
+
     er_update_render(row);
 }
 
@@ -96,4 +98,5 @@ void er_free(struct EditorRow* row)
 {
     free(row->chars);
     free(row->render_chars);
+    free(row->highlight);
 }

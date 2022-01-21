@@ -2,6 +2,7 @@
 #define EDITOR_ROW_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 struct EditorRow
 {
@@ -10,6 +11,8 @@ struct EditorRow
 
     char*  render_chars;
     size_t render_length;
+
+    uint8_t* highlight;
 };
 
 void er_store_line(struct EditorRow* row, const char* line, size_t length);
