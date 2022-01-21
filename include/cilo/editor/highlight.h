@@ -7,4 +7,6 @@ enum HighlightType
     HL_Normal,      // NOLINT
 };
 
+int eh_highlight_to_color(int highlight);
+
 #endif  // HIGHLIGHT_H
