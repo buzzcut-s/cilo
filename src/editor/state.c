@@ -1,6 +1,5 @@
 #include "cilo/editor/state.h"
 
-#include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -118,7 +117,6 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
             sbuffer_insert(sb, &c[i], 1);
         }
     }
-
     sbuffer_insert(sb, GRAPHIC_RENDITION_DEFAULT, 5);
 }
 
