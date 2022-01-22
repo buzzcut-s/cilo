@@ -3,9 +3,9 @@
 
 enum HighlightType
 {
-    HL_Default = -1,  // NOLINT
-    HL_Normal  = 0,   // NOLINT
-    HL_Number,        // NOLINT
+    HighlightDefault = -1,
+    HighlightNormal  = 0,
+    HighlightNumber,
 };
 
 int eh_highlight_to_color(int highlight);

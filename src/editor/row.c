@@ -114,11 +114,11 @@ static void update_highlight(struct EditorRow* row)
         die("update_highlight");
 
     row->highlight = new_highlight;
-    memset(row->highlight, HL_Normal, row->render_length);
+    memset(row->highlight, HighlightNormal, row->render_length);
 
     for (size_t i = 0; i < row->render_length; i++)
     {
         if (isdigit(row->render_chars[i]))
-            row->highlight[i] = HL_Number;
+            row->highlight[i] = HighlightNumber;
     }
 }

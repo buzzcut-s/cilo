@@ -90,14 +90,14 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
     const char*    c  = &editor.rows[row_idx].render_chars[editor.col_offset];
     const uint8_t* hl = &editor.rows[row_idx].highlight[editor.col_offset];
 
-    int prev_color = HL_Default;
+    int prev_color = HighlightDefault;
     for (size_t i = 0; i < length; i++)
     {
-        if (hl[i] == HL_Normal)
+        if (hl[i] == HighlightNormal)
         {
-            if (prev_color != HL_Default)
+            if (prev_color != HighlightDefault)
             {
-                prev_color = HL_Default;
+                prev_color = HighlightDefault;
                 sbuffer_insert(sb, "\x1b[39m", 5);
             }
             sbuffer_insert(sb, &c[i], 1);
