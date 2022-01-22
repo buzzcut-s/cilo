@@ -21,4 +21,8 @@
 
 #define GRAPHIC_RENDITION_NORMAL "\x1b[m"
 
+#define GRAPHIC_RENDITION_DEFAULT "\x1b[39m"
+
+#define GRAPHIC_RENDITION_FORMAT "\x1b[%dm"
+
 #endif  // ANSI_ESCAPE_H

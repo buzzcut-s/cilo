@@ -98,7 +98,7 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
             if (prev_color != HighlightDefault)
             {
                 prev_color = HighlightDefault;
-                sbuffer_insert(sb, "\x1b[39m", 5);
+                sbuffer_insert(sb, GRAPHIC_RENDITION_DEFAULT, 5);
             }
             sbuffer_insert(sb, &c[i], 1);
         }
@@ -111,7 +111,7 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
 
                 char      color_buf[16];
                 const int color_len = snprintf(color_buf, sizeof(color_buf),
-                                               "\x1b[%dm", color);
+                                               GRAPHIC_RENDITION_FORMAT, color);
 
                 sbuffer_insert(sb, color_buf, color_len);
             }
@@ -119,7 +119,7 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
         }
     }
 
-    sbuffer_insert(sb, "\x1b[39m", 5);
+    sbuffer_insert(sb, GRAPHIC_RENDITION_DEFAULT, 5);
 }
 
 static void draw_rows(struct StringBuffer* sb)
