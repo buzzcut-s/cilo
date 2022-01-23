@@ -178,7 +178,6 @@ static size_t editor_cx_to_rx(const struct EditorRow* row, size_t cx)
             rx += (CILO_TAB_STOP - 1) - (rx % CILO_TAB_STOP);
         rx++;
     }
-
     return rx;
 }
 
@@ -278,7 +277,6 @@ void editor_state_insert_line(size_t at, const char* line, size_t length)
                                                             * (editor.rows_capacity));
         if (new_rows == NULL)
             die("editor_state_insert_line");
-
         editor.rows = new_rows;
     }
 

@@ -291,7 +291,6 @@ char* editor_input_from_prompt(const char* prompt,
                 char* new_buf = realloc(buf, buf_capacity);
                 if (new_buf == NULL)
                     die("editor_input_from_prompt");
-
                 buf = new_buf;
             }
 

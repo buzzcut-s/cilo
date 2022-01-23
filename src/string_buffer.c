@@ -28,7 +28,6 @@ void sbuffer_insert(struct StringBuffer* sb, const char* s, size_t length)
         char* new_buffer = realloc(sb->buffer, sb->capacity);
         if (new_buffer == NULL)
             die("sbuffer_insert");
-
         sb->buffer = new_buffer;
     }
 
