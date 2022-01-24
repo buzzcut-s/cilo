@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <cilo/common.h>
+#include <cilo/editor/highlight.h>
 #include <cilo/editor/input.h>
 #include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
@@ -92,10 +93,33 @@ enum SearchDirection
     DirectionBackward,
 };
 
+static void restore_highlight(char* hl, int64_t at)
+{
+    memcpy(editor.rows[at].highlight, hl, editor.rows[at].render_length);
+}
+
+static void save_highlight(const struct EditorRow* row, int64_t at,
+                           char** out_saved_hl, int64_t* out_saved_hl_idx)
+{
+    *out_saved_hl_idx = at;
+    *out_saved_hl     = malloc(row->render_length);
+    memcpy(*out_saved_hl, row->highlight, row->render_length);
+}
+
 static void op_search_callback(const char* query, int key)
 {
     static int     direction        = DirectionForward;
     static int64_t last_matched_idx = -1;
+
+    static char*   saved_hl     = NULL;
+    static int64_t saved_hl_idx = 0;
+
+    if (saved_hl)
+    {
+        restore_highlight(saved_hl, saved_hl_idx);
+        free(saved_hl);
+        saved_hl = NULL;
+    }
 
     if (key == '\r' || key == '\x1b')
     {
@@ -135,6 +159,10 @@ static void op_search_callback(const char* query, int key)
             editor.cursor_y   = current_idx;
             editor.cursor_x   = editor_rx_to_cx(row, matched - row->render_chars);
             editor.row_offset = editor.num_rows;
+
+            save_highlight(row, current_idx, &saved_hl, &saved_hl_idx);
+            memset(&row->highlight[matched - row->render_chars], HighlightMatch, strlen(query));
+
             break;
         }
     }
