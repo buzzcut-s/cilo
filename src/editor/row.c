@@ -1,6 +1,8 @@
 #include "cilo/editor/row.h"
 
 #include <ctype.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -30,14 +32,25 @@ static void update_highlight(struct EditorRow* row)
 
     memset(row->highlight, HighlightNormal, row->render_length);
 
+    bool prev_sep = true;
+
     size_t i = 0;
     while (i < row->render_length)
     {
         const char c = row->render_chars[i];
 
-        if (isdigit(c))
-            row->highlight[i] = HighlightNumber;
+        uint8_t prev_hl = row->highlight[i > 0 ? i - 1 : 0];
 
+        if ((isdigit(c) && (prev_sep || prev_hl == HighlightNumber))
+            || (c == '.' && prev_hl == HighlightNumber))
+        {
+            row->highlight[i] = HighlightNumber;
+            i++;
+            prev_sep = false;
+            continue;
+        }
+
+        prev_sep = eh_is_separator(c);
         i++;
     }
 }
