@@ -30,10 +30,15 @@ static void update_highlight(struct EditorRow* row)
 
     memset(row->highlight, HighlightNormal, row->render_length);
 
-    for (size_t i = 0; i < row->render_length; i++)
+    size_t i = 0;
+    while (i < row->render_length)
     {
-        if (isdigit(row->render_chars[i]))
+        const char c = row->render_chars[i];
+
+        if (isdigit(c))
             row->highlight[i] = HighlightNumber;
+
+        i++;
     }
 }
 
