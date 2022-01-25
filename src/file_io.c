@@ -34,7 +34,7 @@ void file_io_read(const char* path)
         editor_state_rehighlight_file();
 
     FILE* file = fopen(path, "r");
-    if (!file)
+    if (file == NULL)
         die("fopen");
 
     char*  line          = NULL;
