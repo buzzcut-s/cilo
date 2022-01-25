@@ -15,4 +15,6 @@ struct EditorSyntax
     uint32_t           flags;
 };
 
+struct EditorSyntax* es_select_syntax_from(const char* filename);
+
 #endif  // EDITOR_SYNTAX_H
