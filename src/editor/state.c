@@ -312,3 +312,11 @@ void editor_state_set_status_msg(const char* format, ...)
 
     editor.status_msg_time = time(NULL);
 }
+
+void editor_state_rehighlight_file()
+{
+    for (size_t i = 0; i < editor.num_rows; i++)
+    {
+        er_update_highlight(&editor.rows[i]);
+    }
+}

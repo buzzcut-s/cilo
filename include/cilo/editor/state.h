@@ -52,4 +52,6 @@ void editor_state_delete_line(size_t at);
 
 void editor_state_set_status_msg(const char* format, ...);
 
+void editor_state_rehighlight_file();
+
 #endif  // EDITOR_STATE_H

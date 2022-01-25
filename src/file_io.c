@@ -30,6 +30,8 @@ void file_io_read(const char* path)
     editor.filename = strdup(path);
 
     editor.syntax = es_select_syntax_from(editor.filename);
+    if (editor.syntax != NULL)
+        editor_state_rehighlight_file();
 
     FILE* file = fopen(path, "r");
     if (!file)
@@ -88,6 +90,8 @@ void file_io_save()
         }
 
         editor.syntax = es_select_syntax_from(editor.filename);
+        if (editor.syntax != NULL)
+            editor_state_rehighlight_file();
     }
 
     size_t buf_len = 0;
