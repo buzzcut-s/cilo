@@ -12,6 +12,7 @@
 #include <cilo/editor/input.h>
 #include <cilo/editor/row.h>
 #include <cilo/editor/state.h>
+#include <cilo/editor/syntax.h>
 #include <cilo/error.h>
 
 static ssize_t trim_newline(const char* line, ssize_t length)
@@ -27,6 +28,8 @@ static ssize_t trim_newline(const char* line, ssize_t length)
 void file_io_read(const char* path)
 {
     editor.filename = strdup(path);
+
+    editor.syntax = es_select_syntax_from(editor.filename);
 
     FILE* file = fopen(path, "r");
     if (!file)
@@ -83,6 +86,8 @@ void file_io_save()
             editor_state_set_status_msg("Save aborted.");
             return;
         }
+
+        editor.syntax = es_select_syntax_from(editor.filename);
     }
 
     size_t buf_len = 0;
