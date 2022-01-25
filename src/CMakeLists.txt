@@ -16,7 +16,8 @@ target_sources(
          editor/row.c
          file_io.c
          editor/operations.c
-         editor/highlight.c)
+         editor/highlight.c
+         editor/syntax.c)
 
 add_executable(cilo)
 
