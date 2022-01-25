@@ -8,6 +8,8 @@
 
 #include <termios.h>
 
+#include <cilo/editor/syntax.h>
+
 struct EditorState
 {
     struct termios original_state;
@@ -31,6 +33,8 @@ struct EditorState
     size_t rows_capacity;
 
     const char* filename;
+
+    struct EditorSyntax* syntax;
 
     time_t status_msg_time;
     char   status_msg[80];

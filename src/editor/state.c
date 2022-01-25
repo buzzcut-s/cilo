@@ -43,6 +43,8 @@ void editor_state_init()
 
     editor.filename = NULL;
 
+    editor.syntax = NULL;
+
     editor.status_msg_time = 0;
     editor.status_msg[0]   = '\0';
 
@@ -214,7 +216,8 @@ static void draw_status_bar(struct StringBuffer* sb)
     sbuffer_insert(sb, left_status, left_len);
 
     char      right_status[80];
-    const int right_len = snprintf(right_status, sizeof(right_status), "%zu/%zu",
+    const int right_len = snprintf(right_status, sizeof(right_status), "%s | %zu/%zu",
+                                   editor.syntax ? editor.syntax->filetype : "no ft",
                                    editor.cursor_y + 1,
                                    editor.num_rows);
 

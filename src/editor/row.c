@@ -8,6 +8,8 @@
 
 #include <cilo/common.h>
 #include <cilo/editor/highlight.h>
+#include <cilo/editor/state.h>
+#include <cilo/editor/syntax.h>
 #include <cilo/error.h>
 #include <cilo/utils.h>
 
@@ -32,6 +34,9 @@ static void update_highlight(struct EditorRow* row)
 
     memset(row->highlight, HighlightNormal, row->render_length);
 
+    if (editor.syntax == NULL)
+        return;
+
     bool prev_sep = true;
 
     size_t i = 0;
@@ -41,13 +46,16 @@ static void update_highlight(struct EditorRow* row)
 
         uint8_t prev_hl = row->highlight[i > 0 ? i - 1 : 0];
 
-        if ((isdigit(c) && (prev_sep || prev_hl == HighlightNumber))
-            || (c == '.' && prev_hl == HighlightNumber))
+        if (editor.syntax->flags & SyntaxFlagNumbers)
         {
-            row->highlight[i] = HighlightNumber;
-            i++;
-            prev_sep = false;
-            continue;
+            if ((isdigit(c) && (prev_sep || prev_hl == HighlightNumber))
+                || (c == '.' && prev_hl == HighlightNumber))
+            {
+                row->highlight[i] = HighlightNumber;
+                i++;
+                prev_sep = false;
+                continue;
+            }
         }
 
         prev_sep = eh_is_separator(c);
