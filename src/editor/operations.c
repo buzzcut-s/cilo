@@ -70,7 +70,7 @@ void editor_op_insert_new_line()
     editor.cursor_x = 0;
 }
 
-static size_t editor_rx_to_cx(const struct EditorRow* row, size_t rx)
+static inline size_t editor_rx_to_cx(const struct EditorRow* row, size_t rx)
 {
     size_t curr_rx = 0;
 
@@ -93,20 +93,20 @@ enum SearchDirection
     DirectionBackward,
 };
 
-static void restore_highlight(char* hl, int64_t at)
+static inline void restore_highlight(char* hl, int64_t at)
 {
     memcpy(editor.rows[at].highlight, hl, editor.rows[at].render_length);
 }
 
-static void save_highlight(const struct EditorRow* row, int64_t at,
-                           char** out_saved_hl, int64_t* out_saved_hl_idx)
+static inline void save_highlight(const struct EditorRow* row, int64_t at,
+                                  char** out_saved_hl, int64_t* out_saved_hl_idx)
 {
     *out_saved_hl_idx = at;
     *out_saved_hl     = malloc(row->render_length);
     memcpy(*out_saved_hl, row->highlight, row->render_length);
 }
 
-static void op_search_callback(const char* query, int key)
+static inline void op_search_callback(const char* query, int key)
 {
     static int     direction        = DirectionForward;
     static int64_t last_matched_idx = -1;

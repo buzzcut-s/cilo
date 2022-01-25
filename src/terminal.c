@@ -9,19 +9,19 @@
 #include <cilo/editor/state.h>
 #include <cilo/error.h>
 
-static void store_original_terminal_state()
+static inline void store_original_terminal_state()
 {
     if (tcgetattr(STDIN_FILENO, &editor.original_state) == -1)
         die("tcgetattr");
 }
 
-static void restore_original_terminal_state()
+static inline void restore_original_terminal_state()
 {
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &editor.original_state) == -1)
         die("tcsetattr");
 }
 
-static void disable_raw_mode()
+static inline void disable_raw_mode()
 {
     restore_original_terminal_state();
 }

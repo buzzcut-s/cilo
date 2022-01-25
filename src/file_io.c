@@ -15,7 +15,7 @@
 #include <cilo/editor/syntax.h>
 #include <cilo/error.h>
 
-static ssize_t trim_newline(const char* line, ssize_t length)
+static inline ssize_t trim_newline(const char* line, ssize_t length)
 {
     while (length > 0
            && (line[length - 1] == '\n' || line[length - 1] == '\r'))
@@ -53,7 +53,7 @@ void file_io_read(const char* path)
     editor.is_dirty = false;
 }
 
-static char* er_to_string(size_t* out_buf_len)
+static inline char* er_to_string(size_t* out_buf_len)
 {
     size_t total_len = 0;
     for (size_t i = 0; i < editor.num_rows; i++)

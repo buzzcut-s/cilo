@@ -54,12 +54,12 @@ void editor_state_init()
     editor.screen_rows -= 2;
 }
 
-static void clear_line(struct StringBuffer* sb)
+static inline void clear_line(struct StringBuffer* sb)
 {
     sbuffer_insert(sb, ERASE_IN_LINE_TILL_END, 3);
 }
 
-static void insert_padding(struct StringBuffer* sb, size_t padding)
+static inline void insert_padding(struct StringBuffer* sb, size_t padding)
 {
     if (padding--)
         sbuffer_insert(sb, "~", 1);
@@ -70,7 +70,7 @@ static void insert_padding(struct StringBuffer* sb, size_t padding)
     }
 }
 
-static void display_welcome(struct StringBuffer* sb)
+static inline void display_welcome(struct StringBuffer* sb)
 {
     static const char* const WELCOME = "cilo editor";
 
@@ -82,7 +82,7 @@ static void display_welcome(struct StringBuffer* sb)
     sbuffer_insert(sb, WELCOME, length);
 }
 
-static void display_file(struct StringBuffer* sb, size_t row_idx)
+static inline void display_file(struct StringBuffer* sb, size_t row_idx)
 {
     const int64_t chars_to_right = editor.rows[row_idx].render_length - editor.col_offset;
 
@@ -122,7 +122,7 @@ static void display_file(struct StringBuffer* sb, size_t row_idx)
     sbuffer_insert(sb, GRAPHIC_RENDITION_DEFAULT, 5);
 }
 
-static void draw_rows(struct StringBuffer* sb)
+static inline void draw_rows(struct StringBuffer* sb)
 {
     for (size_t y = 0; y < editor.screen_rows; y++)
     {
@@ -145,22 +145,22 @@ static void draw_rows(struct StringBuffer* sb)
     }
 }
 
-static void reset_cursor(struct StringBuffer* sb)
+static inline void reset_cursor(struct StringBuffer* sb)
 {
     sbuffer_insert(sb, CURSOR_POSITION_1_1, 3);
 }
 
-static void hide_cursor(struct StringBuffer* sb)
+static inline void hide_cursor(struct StringBuffer* sb)
 {
     sbuffer_insert(sb, SET_MODE_CURSOR_HIDE, 6);
 }
 
-static void show_cursor(struct StringBuffer* sb)
+static inline void show_cursor(struct StringBuffer* sb)
 {
     sbuffer_insert(sb, SET_MODE_CURSOR_SHOW, 6);
 }
 
-static void update_cursor(struct StringBuffer* sb)
+static inline void update_cursor(struct StringBuffer* sb)
 {
     char buf[32];
 
@@ -171,7 +171,7 @@ static void update_cursor(struct StringBuffer* sb)
     sbuffer_insert(sb, buf, buf_len);
 }
 
-static size_t editor_cx_to_rx(const struct EditorRow* row, size_t cx)
+static inline size_t editor_cx_to_rx(const struct EditorRow* row, size_t cx)
 {
     size_t rx = 0;
     for (size_t i = 0; i < cx; i++)
@@ -202,7 +202,7 @@ void update_scroll()
         editor.col_offset = editor.render_x - editor.screen_cols + 1;
 }
 
-static void draw_status_bar(struct StringBuffer* sb)
+static inline void draw_status_bar(struct StringBuffer* sb)
 {
     sbuffer_insert(sb, GRAPHIC_RENDITION_INVERTED, 4);
 
@@ -236,7 +236,7 @@ static void draw_status_bar(struct StringBuffer* sb)
     sbuffer_insert(sb, GRAPHIC_RENDITION_NORMAL, 3);
 }
 
-static void draw_message_bar(struct StringBuffer* sb)
+static inline void draw_message_bar(struct StringBuffer* sb)
 {
     static const int STATUS_MSG_TIMEOUT = 5;
 

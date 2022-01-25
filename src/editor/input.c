@@ -16,7 +16,7 @@
 
 #define CTRL_PLUS(k) ((k) & (0x1f))
 
-static int handle_escape_sequence()
+static inline int handle_escape_sequence()
 {
     char seq[3];
 
@@ -69,7 +69,7 @@ static int handle_escape_sequence()
     return '\x1b';
 }
 
-static int read_key()
+static inline int read_key()
 {
     char    c      = 0;
     ssize_t n_read = 0;
@@ -86,14 +86,14 @@ static int read_key()
     return c;
 }
 
-static struct EditorRow* get_current_row()
+static inline struct EditorRow* get_current_row()
 {
     return (editor.cursor_y < editor.num_rows)
              ? &editor.rows[editor.cursor_y]
              : NULL;
 }
 
-static void snap_cursor_to_end()
+static inline void snap_cursor_to_end()
 {
     const struct EditorRow* cr = get_current_row();
 
@@ -101,7 +101,7 @@ static void snap_cursor_to_end()
                           cr ? cr->length : 0);
 }
 
-static void move_cursor(int key)
+static inline void move_cursor(int key)
 {
     const struct EditorRow* cr = get_current_row();
 
