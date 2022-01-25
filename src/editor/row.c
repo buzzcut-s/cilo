@@ -25,44 +25,6 @@ void er_store_line(struct EditorRow* row, const char* line, size_t length)
     row->chars[length] = '\0';
 }
 
-static void update_highlight(struct EditorRow* row)
-{
-    uint8_t* new_highlight = realloc(row->highlight, row->render_length);
-    if (new_highlight == NULL)
-        die("update_highlight");
-    row->highlight = new_highlight;
-
-    memset(row->highlight, HighlightNormal, row->render_length);
-
-    if (editor.syntax == NULL)
-        return;
-
-    bool prev_sep = true;
-
-    size_t i = 0;
-    while (i < row->render_length)
-    {
-        const char c = row->render_chars[i];
-
-        uint8_t prev_hl = row->highlight[i > 0 ? i - 1 : 0];
-
-        if (editor.syntax->flags & SyntaxFlagNumbers)
-        {
-            if ((isdigit(c) && (prev_sep || prev_hl == HighlightNumber))
-                || (c == '.' && prev_hl == HighlightNumber))
-            {
-                row->highlight[i] = HighlightNumber;
-                i++;
-                prev_sep = false;
-                continue;
-            }
-        }
-
-        prev_sep = eh_is_separator(c);
-        i++;
-    }
-}
-
 void er_update_render(struct EditorRow* row)
 {
     size_t n_tabs = 0;
@@ -96,7 +58,7 @@ void er_update_render(struct EditorRow* row)
     row->render_length     = idx;
     row->render_chars[idx] = '\0';
 
-    update_highlight(row);
+    er_update_highlight(row);
 }
 
 void er_insert_character(struct EditorRow* row, size_t at, int c)
@@ -141,4 +103,42 @@ void er_free(struct EditorRow* row)
     free(row->chars);
     free(row->render_chars);
     free(row->highlight);
+}
+
+void er_update_highlight(struct EditorRow* row)
+{
+    uint8_t* new_highlight = realloc(row->highlight, row->render_length);
+    if (new_highlight == NULL)
+        die("er_update_highlight");
+    row->highlight = new_highlight;
+
+    memset(row->highlight, HighlightNormal, row->render_length);
+
+    if (editor.syntax == NULL)
+        return;
+
+    bool prev_sep = true;
+
+    size_t i = 0;
+    while (i < row->render_length)
+    {
+        const char c = row->render_chars[i];
+
+        uint8_t prev_hl = row->highlight[i > 0 ? i - 1 : 0];
+
+        if (editor.syntax->flags & SyntaxFlagNumbers)
+        {
+            if ((isdigit(c) && (prev_sep || prev_hl == HighlightNumber))
+                || (c == '.' && prev_hl == HighlightNumber))
+            {
+                row->highlight[i] = HighlightNumber;
+                i++;
+                prev_sep = false;
+                continue;
+            }
+        }
+
+        prev_sep = eh_is_separator(c);
+        i++;
+    }
 }
