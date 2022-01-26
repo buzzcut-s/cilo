@@ -120,28 +120,28 @@ void er_update_highlight(struct EditorRow* row)
     if (editor.syntax == NULL)
         return;
 
-    bool prev_sep = true;
+    bool prev_was_sep = true;
 
     size_t i = 0;
     while (i < row->render_length)
     {
-        const char c = row->render_chars[i];
+        const char current = row->render_chars[i];
 
         uint8_t prev_hl = row->highlight[i > 0 ? i - 1 : 0];
 
         if (editor.syntax->flags & SyntaxFlagNumbers)
         {
-            if ((isdigit(c) && (prev_sep || prev_hl == HighlightNumber))
-                || (c == '.' && prev_hl == HighlightNumber))
+            if ((isdigit(current) && (prev_was_sep || prev_hl == HighlightNumber))
+                || (current == '.' && prev_hl == HighlightNumber))
             {
                 row->highlight[i] = HighlightNumber;
+                prev_was_sep      = false;
                 i++;
-                prev_sep = false;
                 continue;
             }
         }
 
-        prev_sep = eh_is_separator(c);
+        prev_was_sep = eh_is_separator(current);
         i++;
     }
 }
