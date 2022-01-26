@@ -25,13 +25,10 @@ static inline ssize_t trim_newline(const char* line, ssize_t length)
     return length;
 }
 
-void file_io_read(const char* path)
+void file_io_open(const char* path)
 {
     editor.filename = strdup(path);
-
-    editor.syntax = es_select_syntax_from(editor.filename);
-    if (editor.syntax != NULL)
-        editor_state_rehighlight_file();
+    editor.syntax   = es_select_syntax_from(editor.filename);
 
     FILE* file = fopen(path, "r");
     if (file == NULL)
