@@ -107,6 +107,9 @@ void er_free(struct EditorRow* row)
 
 void er_update_highlight(struct EditorRow* row)
 {
+    if (row->render_length == 0)
+        return;
+
     uint8_t* new_highlight = realloc(row->highlight, row->render_length);
     if (new_highlight == NULL)
         die("er_update_highlight");
