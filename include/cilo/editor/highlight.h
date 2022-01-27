@@ -11,6 +11,8 @@ enum EditorHighlightType
     HighlightMatch,
     HighlightString,
     HighlightComment,
+    HighlightKeyword1,
+    HighlightKeyword2,
 };
 
 int eh_highlight_to_color(int highlight);
