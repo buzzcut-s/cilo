@@ -23,6 +23,8 @@ void er_store_line(struct EditorRow* row, const char* line, size_t length)
 
     memcpy(row->chars, line, length);
     row->chars[length] = '\0';
+
+    row->highlight = NULL;
 }
 
 void er_update_render(struct EditorRow* row)
