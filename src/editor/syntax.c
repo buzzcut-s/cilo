@@ -11,7 +11,7 @@ static struct EditorSyntax editor_syntax_database[] =
   {
     {"c",
      C_SYNTAX_MATCHES,
-     SyntaxFlagNumbers},
+     SyntaxFlagNumbers | SyntaxFlagStrings},
 };
 
 static inline size_t syntax_db_size()

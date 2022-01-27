@@ -6,6 +6,7 @@
 enum EditorSyntaxFlags
 {
     SyntaxFlagNumbers = 1 << 0,
+    SyntaxFlagStrings = 1 << 2,
 };
 
 struct EditorSyntax
