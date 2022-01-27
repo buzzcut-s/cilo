@@ -3,18 +3,30 @@
 #include <ctype.h>
 #include <string.h>
 
+enum TerminalColors
+{
+    Red = 31,
+    Green,
+    Yellow,
+    Blue,
+    Magenta,
+    Cyan,
+    White,
+    Default = 39,
+};
+
 int eh_highlight_to_color(int highlight)
 {
     switch (highlight)  // clang-format off
     {
-        case HighlightDefault:  return 39;
-        case HighlightNumber:   return 31;
-        case HighlightKeyword2: return 32;
-        case HighlightKeyword1: return 33;
-        case HighlightMatch:    return 34;
-        case HighlightString:   return 35;
-        case HighlightComment:  return 36;
-        default:                return 37;
+        case HighlightDefault:  return Default;
+        case HighlightNumber:   return Red;
+        case HighlightKeyword2: return Green;
+        case HighlightKeyword1: return Yellow;
+        case HighlightMatch:    return Blue;
+        case HighlightString:   return Magenta;
+        case HighlightComment:  return Cyan;
+        default:                return White;
     }  // clang-format on
 }
 
