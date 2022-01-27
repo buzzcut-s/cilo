@@ -13,6 +13,7 @@ struct EditorSyntax
 {
     const char*        filetype;
     const char* const* filetype_matches;
+    const char*        single_line_comment_start;
     uint32_t           flags;
 };
 

@@ -11,6 +11,7 @@ static struct EditorSyntax editor_syntax_database[] =
   {
     {"c",
      C_SYNTAX_MATCHES,
+     "//",
      SyntaxFlagNumbers | SyntaxFlagStrings},
 };
 
