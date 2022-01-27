@@ -120,7 +120,8 @@ void er_update_highlight(struct EditorRow* row)
     if (editor.syntax == NULL)
         return;
 
-    bool prev_was_sep = true;
+    bool prev_was_sep   = true;
+    char in_string_type = 0;
 
     size_t i = 0;
     while (i < row->render_length)
@@ -128,6 +129,36 @@ void er_update_highlight(struct EditorRow* row)
         const char current = row->render_chars[i];
 
         uint8_t prev_hl = row->highlight[i > 0 ? i - 1 : 0];
+
+        if (editor.syntax->flags & SyntaxFlagStrings)
+        {
+            if (in_string_type)
+            {
+                row->highlight[i] = HighlightString;
+
+                if (current == '\\' && i + 1 < row->render_length)
+                {
+                    row->highlight[i + 1] = HighlightString;
+                    i += 2;
+                    continue;
+                }
+
+                if (current == in_string_type)
+                    in_string_type = 0;
+
+                prev_was_sep = false;
+                i++;
+                continue;
+            }
+
+            if (current == '"' || current == '\'')
+            {
+                row->highlight[i] = HighlightString;
+                in_string_type    = current;
+                i++;
+                continue;
+            }
+        }
 
         if (editor.syntax->flags & SyntaxFlagNumbers)
         {
