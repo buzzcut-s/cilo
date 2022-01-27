@@ -9,6 +9,7 @@ enum EditorHighlightType
     HighlightNormal  = 0,
     HighlightNumber,
     HighlightMatch,
+    HighlightString,
 };
 
 int eh_highlight_to_color(int highlight);
