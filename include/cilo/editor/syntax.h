@@ -1,6 +1,7 @@
 #ifndef EDITOR_SYNTAX_H
 #define EDITOR_SYNTAX_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 enum EditorSyntaxFlags
@@ -17,6 +18,8 @@ struct EditorSyntax
     uint32_t           flags;
 };
 
-struct EditorSyntax* es_select_syntax_from(const char* filename);
+struct EditorSyntax* editor_syntax_select_from(const char* filename);
+
+bool editor_syntax_is_separator(char c);
 
 #endif  // EDITOR_SYNTAX_H

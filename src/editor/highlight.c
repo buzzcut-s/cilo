@@ -1,8 +1,5 @@
 #include "cilo/editor/highlight.h"
 
-#include <ctype.h>
-#include <string.h>
-
 enum TerminalColors
 {
     Red = 31,
@@ -15,7 +12,7 @@ enum TerminalColors
     Default = 39,
 };
 
-int eh_highlight_to_color(int highlight)
+int editor_highlight_to_color(int highlight)
 {
     switch (highlight)  // clang-format off
     {
@@ -28,9 +25,4 @@ int eh_highlight_to_color(int highlight)
         case HighlightComment:  return Cyan;
         default:                return White;
     }  // clang-format on
-}
-
-bool eh_is_separator(char c)
-{
-    return isspace(c) || c == '\0' || strchr(",.()+-/*=~%<>[];", c) != NULL;
 }

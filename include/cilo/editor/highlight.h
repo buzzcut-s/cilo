@@ -1,8 +1,6 @@
 #ifndef EDITOR_HIGHLIGHT_H
 #define EDITOR_HIGHLIGHT_H
 
-#include <stdbool.h>
-
 enum EditorHighlightType
 {
     HighlightDefault = -1,
@@ -15,8 +13,6 @@ enum EditorHighlightType
     HighlightKeyword2,
 };
 
-int eh_highlight_to_color(int highlight);
-
-bool eh_is_separator(char c);
+int editor_highlight_to_color(int highlight);
 
 #endif  // EDITOR_HIGHLIGHT_H

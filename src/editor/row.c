@@ -186,7 +186,7 @@ void er_update_highlight(struct EditorRow* row)
             }
         }
 
-        prev_was_sep = eh_is_separator(current);
+        prev_was_sep = editor_syntax_is_separator(current);
         i++;
     }
 }

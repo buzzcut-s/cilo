@@ -105,7 +105,7 @@ static inline void display_file(struct StringBuffer* sb, size_t row_idx)
         }
         else
         {
-            const int color = eh_highlight_to_color(hl[i]);
+            const int color = editor_highlight_to_color(hl[i]);
             if (color != prev_color)
             {
                 prev_color = color;

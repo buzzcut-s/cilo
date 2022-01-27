@@ -1,5 +1,6 @@
 #include "cilo/editor/syntax.h"
 
+#include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
@@ -21,7 +22,7 @@ static inline size_t syntax_db_size()
             / sizeof(editor_syntax_database[0]));
 }
 
-struct EditorSyntax* es_select_syntax_from(const char* filename)
+struct EditorSyntax* editor_syntax_select_from(const char* filename)
 {
     if (filename == NULL)
         return NULL;
@@ -50,4 +51,9 @@ struct EditorSyntax* es_select_syntax_from(const char* filename)
     }
 
     return NULL;
+}
+
+bool editor_syntax_is_separator(char c)
+{
+    return isspace(c) || c == '\0' || strchr(",.()+-/*=~%<>[];", c) != NULL;
 }
