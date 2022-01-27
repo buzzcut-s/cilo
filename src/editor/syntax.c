@@ -6,7 +6,7 @@
 #include <string.h>
 
 static const char* const C_SYNTAX_MATCHES[] =
-  {".c", ".h", ".cpp", NULL};
+  {".c", ".h", ".cpp", ".hpp", NULL};
 
 static struct EditorSyntax editor_syntax_database[] =
   {
@@ -33,20 +33,20 @@ struct EditorSyntax* editor_syntax_select_from(const char* filename)
     {
         struct EditorSyntax* entry = &editor_syntax_database[i];
 
-        size_t j = 0;
-        while (entry->filetype_matches[j])
+        size_t match_idx = 0;
+        while (entry->filetype_matches[match_idx])
         {
-            const bool match_pattern_is_ext = entry->filetype_matches[j][0] == '.';
+            const bool match_pattern_is_ext = entry->filetype_matches[match_idx][0] == '.';
 
             if ((match_pattern_is_ext && file_ext
-                 && !strcmp(file_ext, entry->filetype_matches[j]))
+                 && !strcmp(file_ext, entry->filetype_matches[match_idx]))
                 || (!match_pattern_is_ext
-                    && strstr(filename, entry->filetype_matches[j])))
+                    && strstr(filename, entry->filetype_matches[match_idx])))
             {
                 return entry;
             }
 
-            i++;
+            match_idx++;
         }
     }
 
