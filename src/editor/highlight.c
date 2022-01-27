@@ -11,6 +11,7 @@ int eh_highlight_to_color(int highlight)
         case HighlightNumber:  return 31;
         case HighlightMatch:   return 34;
         case HighlightString:  return 35;
+        case HighlightComment: return 36;
         default:               return 37;
     }  // clang-format on
 }
