@@ -12,7 +12,7 @@ struct EditorRow
     char*  render_chars;
     size_t render_length;
 
-    uint8_t* highlight;
+    uint8_t* highlights;
 };
 
 void er_store_line(struct EditorRow* row, const char* line, size_t length);

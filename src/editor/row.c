@@ -24,7 +24,7 @@ void er_store_line(struct EditorRow* row, const char* line, size_t length)
     memcpy(row->chars, line, length);
     row->chars[length] = '\0';
 
-    row->highlight = NULL;
+    row->highlights = NULL;
 }
 
 void er_update_render(struct EditorRow* row)
@@ -74,7 +74,7 @@ void er_insert_character(struct EditorRow* row, size_t at, int c)
     row->length++;
     row->chars[at] = c;
 
-    row->highlight = NULL;
+    row->highlights = NULL;
 
     er_update_render(row);
 }
@@ -104,7 +104,7 @@ void er_free(struct EditorRow* row)
 {
     free(row->chars);
     free(row->render_chars);
-    free(row->highlight);
+    free(row->highlights);
 }
 
 void er_update_highlight(struct EditorRow* row)
@@ -112,12 +112,12 @@ void er_update_highlight(struct EditorRow* row)
     if (row->render_length == 0)
         return;
 
-    uint8_t* new_highlight = realloc(row->highlight, row->render_length);
-    if (new_highlight == NULL)
+    uint8_t* new_highlights = realloc(row->highlights, row->render_length);
+    if (new_highlights == NULL)
         die("er_update_highlight");
-    row->highlight = new_highlight;
+    row->highlights = new_highlights;
 
-    memset(row->highlight, HighlightNormal, row->render_length);
+    memset(row->highlights, HighlightNormal, row->render_length);
 
     if (editor.syntax == NULL)
         return;
@@ -133,13 +133,13 @@ void er_update_highlight(struct EditorRow* row)
     {
         const char current = row->render_chars[i];
 
-        uint8_t prev_hl = row->highlight[i > 0 ? i - 1 : 0];
+        uint8_t prev_hl = row->highlights[i > 0 ? i - 1 : 0];
 
         if (scs_len && !in_string_type)
         {
             if (!strncmp(&row->render_chars[i], scs, scs_len))
             {
-                memset(&row->highlight[i], HighlightComment, row->render_length - i);
+                memset(&row->highlights[i], HighlightComment, row->render_length - i);
                 break;
             }
         }
@@ -148,11 +148,11 @@ void er_update_highlight(struct EditorRow* row)
         {
             if (in_string_type)
             {
-                row->highlight[i] = HighlightString;
+                row->highlights[i] = HighlightString;
 
                 if (current == '\\' && i + 1 < row->render_length)
                 {
-                    row->highlight[i + 1] = HighlightString;
+                    row->highlights[i + 1] = HighlightString;
                     i += 2;
                     continue;
                 }
@@ -167,8 +167,8 @@ void er_update_highlight(struct EditorRow* row)
 
             if (current == '"' || current == '\'')
             {
-                row->highlight[i] = HighlightString;
-                in_string_type    = current;
+                row->highlights[i] = HighlightString;
+                in_string_type     = current;
                 i++;
                 continue;
             }
@@ -179,8 +179,8 @@ void er_update_highlight(struct EditorRow* row)
             if ((isdigit(current) && (prev_was_sep || prev_hl == HighlightNumber))
                 || (current == '.' && prev_hl == HighlightNumber))
             {
-                row->highlight[i] = HighlightNumber;
-                prev_was_sep      = false;
+                row->highlights[i] = HighlightNumber;
+                prev_was_sep       = false;
                 i++;
                 continue;
             }

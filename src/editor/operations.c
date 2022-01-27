@@ -95,7 +95,7 @@ enum SearchDirection
 
 static inline void restore_highlight(char* hl, int64_t at)
 {
-    memcpy(editor.rows[at].highlight, hl, editor.rows[at].render_length);
+    memcpy(editor.rows[at].highlights, hl, editor.rows[at].render_length);
 }
 
 static inline void save_highlight(const struct EditorRow* row, int64_t at,
@@ -103,7 +103,7 @@ static inline void save_highlight(const struct EditorRow* row, int64_t at,
 {
     *out_saved_hl_idx = at;
     *out_saved_hl     = malloc(row->render_length);
-    memcpy(*out_saved_hl, row->highlight, row->render_length);
+    memcpy(*out_saved_hl, row->highlights, row->render_length);
 }
 
 static inline void op_search_callback(const char* query, int key)
@@ -161,7 +161,7 @@ static inline void op_search_callback(const char* query, int key)
             editor.row_offset = editor.num_rows;
 
             save_highlight(row, current_idx, &saved_hl, &saved_hl_idx);
-            memset(&row->highlight[matched - row->render_chars], HighlightMatch, strlen(query));
+            memset(&row->highlights[matched - row->render_chars], HighlightMatch, strlen(query));
 
             break;
         }

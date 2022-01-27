@@ -89,7 +89,7 @@ static inline void display_file(struct StringBuffer* sb, size_t row_idx)
     const size_t length = MIN(MAX(chars_to_right, 0), editor.screen_cols);
 
     const char*    c  = &editor.rows[row_idx].render_chars[editor.col_offset];
-    const uint8_t* hl = &editor.rows[row_idx].highlight[editor.col_offset];
+    const uint8_t* hl = &editor.rows[row_idx].highlights[editor.col_offset];
 
     int prev_color = HighlightDefault;
     for (size_t i = 0; i < length; i++)
