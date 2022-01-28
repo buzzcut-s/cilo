@@ -122,22 +122,21 @@ void er_update_highlight(struct EditorRow* row)
     if (editor.syntax == NULL)
         return;
 
+    const char*  slcs     = editor.syntax->single_line_comment_start;
+    const size_t slcs_len = slcs ? strlen(slcs) : 0;
+
     bool prev_was_sep   = true;
     char in_string_type = 0;
-
-    const char*  scs     = editor.syntax->single_line_comment_start;
-    const size_t scs_len = scs ? strlen(scs) : 0;
 
     size_t i = 0;
     while (i < row->render_length)
     {
-        const char current = row->render_chars[i];
+        const char    current = row->render_chars[i];
+        const uint8_t prev_hl = row->highlights[i > 0 ? i - 1 : 0];
 
-        uint8_t prev_hl = row->highlights[i > 0 ? i - 1 : 0];
-
-        if (scs_len && !in_string_type)
+        if (slcs_len && !in_string_type)
         {
-            if (!strncmp(&row->render_chars[i], scs, scs_len))
+            if (!strncmp(&row->render_chars[i], slcs, slcs_len))
             {
                 memset(&row->highlights[i], HighlightComment, row->render_length - i);
                 break;
