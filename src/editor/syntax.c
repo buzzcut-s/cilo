@@ -10,10 +10,23 @@ static const char* const C_SYNTAX_MATCHES[] =
 
 static const char* const C_SYNTAX_KEYWORDS[] =
   {"switch", "if", "while", "for", "break", "continue", "return", "else",
-   "struct", "union", "typedef", "static", "enum", "class", "case",
+   "struct", "union", "typedef", "static", "enum", "class", "case", "const",
+   "inline", "sizeof", "#include", "#pragma", "#define",
 
-   "int|", "long|", "double|", "float|", "char|", "unsigned|", "signed|",
-   "void|", NULL};
+   "NULL",
+
+   "malloc", "realloc", "calloc", "free",
+   "memcpy", "memmove", "memset",
+
+   "int|", "long|", "double|", "float|", "char|", "unsigned|", "signed|", "void|",
+   "bool|", "size_t|",
+
+   "strchr", "strdup", "strstr", "strlen", "strrchr",
+   "isspace", "isdigit",
+
+   "int8_t|", "int16_t|", "int32_t|", "int64_t|",
+   "uint8_t|", "uint16_t|", "uint32_t|", "uint64_t|",
+   NULL};
 
 static struct EditorSyntax editor_syntax_database[] =
   {
