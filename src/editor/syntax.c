@@ -8,12 +8,20 @@
 static const char* const C_SYNTAX_MATCHES[] =
   {".c", ".h", ".cpp", ".hpp", NULL};
 
+static const char* const C_SYNTAX_KEYWORDS[] =
+  {"switch", "if", "while", "for", "break", "continue", "return", "else",
+   "struct", "union", "typedef", "static", "enum", "class", "case",
+
+   "int|", "long|", "double|", "float|", "char|", "unsigned|", "signed|",
+   "void|", NULL};
+
 static struct EditorSyntax editor_syntax_database[] =
   {
-    {"c",
-     C_SYNTAX_MATCHES,
-     "//",
-     SyntaxFlagNumbers | SyntaxFlagStrings},
+    {.filetype                  = "c",
+     .filetype_matches          = C_SYNTAX_MATCHES,
+     .keywords                  = C_SYNTAX_KEYWORDS,
+     .single_line_comment_start = "//",
+     .flags                     = SyntaxFlagNumbers | SyntaxFlagStrings},
 };
 
 static inline size_t syntax_db_size()

@@ -12,10 +12,13 @@ enum EditorSyntaxFlags
 
 struct EditorSyntax
 {
-    const char*        filetype;
+    const char* filetype;
+    const char* single_line_comment_start;
+
+    const char* const* keywords;
     const char* const* filetype_matches;
-    const char*        single_line_comment_start;
-    uint32_t           flags;
+
+    uint32_t flags;
 };
 
 struct EditorSyntax* editor_syntax_select_from(const char* filename);
