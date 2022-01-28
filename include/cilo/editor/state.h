@@ -54,4 +54,6 @@ void editor_state_set_status_msg(const char* format, ...);
 
 void editor_state_rehighlight_file();
 
+char* editor_state_rows_to_string(size_t* out_buf_len);
+
 #endif  // EDITOR_STATE_H

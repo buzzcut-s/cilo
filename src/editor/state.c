@@ -320,3 +320,28 @@ void editor_state_rehighlight_file()
         er_update_highlight(&editor.rows[i]);
     }
 }
+
+char* editor_state_rows_to_string(size_t* out_buf_len)
+{
+    size_t total_len = 0;
+    for (size_t i = 0; i < editor.num_rows; i++)
+    {
+        total_len += editor.rows[i].length + 1;
+    }
+    *out_buf_len = total_len;
+
+    char* buf = malloc(total_len);
+    if (buf == NULL)
+        die("er_to_string");
+
+    char* p = buf;
+    for (size_t i = 0; i < editor.num_rows; i++)
+    {
+        memcpy(p, editor.rows[i].chars, editor.rows[i].length);
+        p += editor.rows[i].length;
+        *p = '\n';
+        p++;
+    }
+
+    return buf;
+}

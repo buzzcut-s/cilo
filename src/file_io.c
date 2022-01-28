@@ -50,31 +50,6 @@ void file_io_open(const char* path)
     editor.is_dirty = false;
 }
 
-static inline char* er_to_string(size_t* out_buf_len)
-{
-    size_t total_len = 0;
-    for (size_t i = 0; i < editor.num_rows; i++)
-    {
-        total_len += editor.rows[i].length + 1;
-    }
-    *out_buf_len = total_len;
-
-    char* buf = malloc(total_len);
-    if (buf == NULL)
-        die("er_to_string");
-
-    char* p = buf;
-    for (size_t i = 0; i < editor.num_rows; i++)
-    {
-        memcpy(p, editor.rows[i].chars, editor.rows[i].length);
-        p += editor.rows[i].length;
-        *p = '\n';
-        p++;
-    }
-
-    return buf;
-}
-
 void file_io_save()
 {
     if (editor.filename == NULL)
@@ -92,7 +67,7 @@ void file_io_save()
     }
 
     size_t buf_len = 0;
-    char*  buf     = er_to_string(&buf_len);
+    char*  buf     = editor_state_rows_to_string(&buf_len);
 
     const int fd = open(editor.filename, O_RDWR | O_CREAT, 0644);
     if (fd != -1)
