@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <cilo/editor/state.h>
 #include <cilo/terminal.h>
 
 void die(const char* s)
