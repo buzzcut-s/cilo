@@ -122,6 +122,8 @@ void er_update_highlight(struct EditorRow* row)
     if (editor.syntax == NULL)
         return;
 
+    const char* const* keywords = editor.syntax->keywords;
+
     const char*  slcs     = editor.syntax->single_line_comment_start;
     const size_t slcs_len = slcs ? strlen(slcs) : 0;
 
@@ -181,6 +183,35 @@ void er_update_highlight(struct EditorRow* row)
                 row->highlights[i] = HighlightNumber;
                 prev_was_sep       = false;
                 i++;
+                continue;
+            }
+        }
+
+        if (prev_was_sep)
+        {
+            size_t kw_idx = 0;
+            for (kw_idx = 0; keywords[kw_idx] != NULL; kw_idx++)
+            {
+                size_t kw_len = strlen(keywords[kw_idx]);
+
+                const bool kw_is_secondary = keywords[kw_idx][kw_len - 1] == '|';
+                if (kw_is_secondary)
+                    kw_len--;
+
+                if (!strncmp(&row->render_chars[i], keywords[kw_idx], kw_len)
+                    && editor_syntax_is_separator(row->render_chars[i + kw_len]))
+                {
+                    memset(&row->highlights[i],
+                           kw_is_secondary ? HighlightKeyword2 : HighlightKeyword1,
+                           kw_len);
+                    i += kw_len;
+                    break;
+                }
+            }
+
+            if (keywords[kw_idx] != NULL)
+            {
+                prev_was_sep = true;
                 continue;
             }
         }
